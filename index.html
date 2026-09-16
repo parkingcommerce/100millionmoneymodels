@@ -112,6 +112,8 @@
     .seg button{border:0;background:#fff;color:var(--vu-gold-2);font-weight:700;font-size:.74rem;padding:6px 15px;cursor:pointer}
     .seg button[aria-pressed=true]{background:var(--vu-gold);color:#1c1a17}
     .seg button:focus-visible{outline:2px solid var(--vu-black);outline-offset:-2px}
+    .gallery{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--border);border-top:3px solid var(--vu-gold);border-radius:6px;margin:12px 0;background:#0a0a0a;box-shadow:var(--shadow-sm)}
+    .gallery .gal-img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .26s ease}
     .res{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:12px 0;background:#fff}
     .res .thumb{position:relative;aspect-ratio:16/9;background:#000;cursor:pointer;border:0;padding:0;width:100%;display:block}
     .res .thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:.94}
@@ -148,9 +150,10 @@
 <div class="gamebar">
 <button class="back-btn" id="backBtn" type="button" disabled>Back to Previous Choice</button>
 <details class="fb-toggle" id="fbToggle">
-<summary>What is one thing Vanderbilt could improve?</summary>
+<summary>Say one bad thing about Vanderbilt.</summary>
 <div class="fb-panel">
-<p class="prompt">What is one thing Vanderbilt could improve?</p>
+<p class="prompt">Say one bad thing about Vanderbilt.</p>
+<div class="gallery" id="galFeedback"></div>
 <p class="note">Optional—your response may appear publicly after moderation. Please do not include personal information (no emails, IDs, or full/legal names).</p>
 <div class="field"><label for="fbText">Your suggestion<span class="counter" id="fbCount">0/280</span></label><textarea id="fbText" maxlength="280" rows="3" placeholder="Share one constructive idea…"></textarea></div>
 <div class="field"><label>Attribution</label><div class="radio-row"><label><input type="radio" name="fbMode" value="anon" checked> Submit anonymously</label><label><input type="radio" name="fbMode" value="named"> Use display name</label></div></div>
@@ -320,10 +323,11 @@ async function reportItem(table,id,btn){var reason=prompt('Report this item. Bri
 
 /* --- community feedback panel --- */
 async function renderFeedbackPanel(){var el=document.getElementById('panel-feedback');if(!el)return;
- var head='<p class="panel-title">Community Feedback'+(BACKEND_READY?'':'<span class="demo-badge">Demo</span>')+'</p><p class="note">Moderated suggestions from players. Share yours using the prompt near the “Back to Previous Choice” button.</p>';
- if(!BACKEND_READY){el.innerHTML=head+'<div class="item"><em>Approved community feedback will appear here once the backend is configured. Submissions are safely disabled in demo mode.</em></div>';return}
- el.innerHTML=head+'<div class="note">Loading…</div>';
- try{var rows=await api('feedback?status=eq.approved&order=created_at.desc&limit=50');el.innerHTML=head+(rows.length?rows.map(feedbackItem).join(''):'<div class="item"><em>No approved feedback yet.</em></div>');wireReports(el)}catch(e){el.innerHTML=head+'<div class="item err">Could not load feedback right now.</div>'}}
+ var head='<p class="panel-title">Community Feedback'+(BACKEND_READY?'':'<span class="demo-badge">Demo</span>')+'</p><div class="gallery" id="galCommunity"></div><p class="note">Moderated suggestions from players. Share yours using the prompt near the “Back to Previous Choice” button.</p>';
+ var gal=function(){initGallery(el.querySelector('#galCommunity'))};
+ if(!BACKEND_READY){el.innerHTML=head+'<div class="item"><em>Approved community feedback will appear here once the backend is configured. Submissions are safely disabled in demo mode.</em></div>';gal();return}
+ el.innerHTML=head+'<div class="note">Loading…</div>';gal();
+ try{var rows=await api('feedback?status=eq.approved&order=created_at.desc&limit=50');el.innerHTML=head+(rows.length?rows.map(feedbackItem).join(''):'<div class="item"><em>No approved feedback yet.</em></div>');gal();wireReports(el)}catch(e){el.innerHTML=head+'<div class="item err">Could not load feedback right now.</div>';gal()}}
 function feedbackItem(r){return '<div class="item"><div>'+esc(r.body)+'</div><div class="meta"><span class="who">'+(r.display_name?esc(r.display_name):'Anonymous')+'</span><button class="report-btn" data-table="feedback" data-id="'+esc(r.id)+'">Report</button></div></div>'}
 
 /* --- leaderboard panel --- */
@@ -404,7 +408,14 @@ async function loadQueue(){var body=document.getElementById('modBody');body.inne
 function modItem(table,r,text){return '<div class="item"><div>'+esc(text)+'</div><div class="meta"><span>'+esc(table)+'</span><span><button class="vu-btn gold" data-table="'+table+'" data-id="'+esc(r.id)+'" data-act="approved">Approve</button> <button class="vu-btn ghost" data-table="'+table+'" data-id="'+esc(r.id)+'" data-act="rejected">Reject</button></span></div></div>'}
 async function setStatus(table,id,status){try{await api(table+'?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:{status:status},token:adminToken});loadQueue()}catch(e){alert('Update failed.')}}
 
-function initFeatures(){initFeedbackForm();initTabs();initAside();renderFeedbackPanel();renderLeaderboardPanel();renderResourcesPanel();var bb=document.getElementById('backBtn');if(bb)bb.addEventListener('click',back);updateBackBtn();initModeration()}
+/* --- auto-rotating gallery (images change automatically) --- */
+const GALLERY=['assets/images/gallery-1.png','assets/images/gallery-2.png'];
+GALLERY.forEach(function(src){var i=new Image();i.src=src});
+function initGallery(el){if(!el||el.dataset.init)return;el.dataset.init='1';el.classList.add('gallery');
+ var i=0;var img=document.createElement('img');img.className='gal-img';img.alt='Commodore Crossroads gallery';img.src=GALLERY[0];el.appendChild(img);
+ if(GALLERY.length<2)return;
+ setInterval(function(){i=(i+1)%GALLERY.length;img.style.opacity='0';setTimeout(function(){img.src=GALLERY[i];img.style.opacity='1'},260)},3500)}
+function initFeatures(){initFeedbackForm();initTabs();initAside();renderFeedbackPanel();renderLeaderboardPanel();renderResourcesPanel();initGallery(document.getElementById('galFeedback'));var bb=document.getElementById('backBtn');if(bb)bb.addEventListener('click',back);updateBackBtn();initModeration()}
 window.addEventListener('hashchange',initModeration);
 initFeatures();
 </script></body></html>
