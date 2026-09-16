@@ -216,6 +216,11 @@
     .up-preview img{width:100%;max-height:150px;object-fit:contain;display:block;background:#0a0a0a}
     .up-form .consent{font-size:.8rem}.up-form .vu-btn{width:100%;justify-content:center}
     .mod-card img{max-width:100%;border-radius:6px}
+    .item-actions{display:flex;gap:10px;align-items:center}
+    .react-btn{font-size:.72rem;color:var(--vu-gold-2);background:#fbf6ea;border:1px solid var(--vu-gold);border-radius:999px;padding:2px 9px;cursor:pointer;font-weight:700}
+    .react-btn:hover{background:var(--vu-gold);color:#1c1a17}
+    .react-btn:disabled{opacity:.55;cursor:default}
+    .react-btn:focus-visible{outline:none;box-shadow:0 0 0 2px var(--vu-gold)}
     .vu-footer{margin:0;padding:clamp(3px,.8vh,6px) 12px;border-top:1px solid var(--border);font-size:clamp(.6rem,.8vw,.75rem);text-align:center;flex:0 0 auto;background:#efe7d6;color:var(--muted)}
     @media(max-width:900px){
       .sec-tabs{display:flex}
@@ -230,23 +235,24 @@
 <header class="vu-header"><div class="vu-brandbar"><img class="vu-logo" src="assets/images/vanderbilt-star.png" alt="Vanderbilt star logo"><span class="vu-wordmark">Vanderbilt University</span></div><div class="vu-gametitle">Commodore Crossroads</div></header>
 <nav class="sec-tabs" aria-label="Sections">
 <button class="sec-tab" type="button" data-sec="secGame" aria-selected="true">Game</button>
-<button class="sec-tab" type="button" data-sec="secLR" aria-selected="false">Leaderboard</button>
+<button class="sec-tab" type="button" data-sec="secLR" aria-selected="false">Hall of Shame</button>
 <button class="sec-tab" type="button" data-sec="secGallery" aria-selected="false">Gallery</button>
 </nav>
 <div class="app-grid">
 <section class="col main-game" id="secGame" aria-label="Game">
 <div class="hud-wrap"><div class="hud" id="hud"></div></div>
 <div class="gamebar"><button class="back-btn" id="backBtn" type="button" disabled>Back to Previous Choice</button></div>
-<div class="featured"><img class="featured-img" src="assets/images/gallery-1.png" alt="Commodore Crossroads featured artwork"></div>
 <main id="stage"></main>
 </section>
-<section class="col side" id="secLR" aria-label="Leaderboard and Resources">
+<section class="col side" id="secLR" aria-label="Hall of Shame, Game Rankings, and Resources">
 <div class="card-lite">
-<div class="tabs" role="tablist" aria-label="Leaderboard and Resources">
-<button class="tab" role="tab" id="tab-leaderboard" aria-controls="panel-leaderboard" aria-selected="true">Leaderboard</button>
+<div class="tabs" role="tablist" aria-label="Hall of Shame, Game Rankings, and Resources">
+<button class="tab" role="tab" id="tab-shame" aria-controls="panel-shame" aria-selected="true">Hall of Shame</button>
+<button class="tab" role="tab" id="tab-rankings" aria-controls="panel-rankings" aria-selected="false" tabindex="-1">Game Rankings</button>
 <button class="tab" role="tab" id="tab-resources" aria-controls="panel-resources" aria-selected="false" tabindex="-1">Resources</button>
 </div>
-<div class="tabpanel active" role="tabpanel" id="panel-leaderboard" aria-labelledby="tab-leaderboard"></div>
+<div class="tabpanel active" role="tabpanel" id="panel-shame" aria-labelledby="tab-shame"></div>
+<div class="tabpanel" role="tabpanel" id="panel-rankings" aria-labelledby="tab-rankings"></div>
 <div class="tabpanel" role="tabpanel" id="panel-resources" aria-labelledby="tab-resources"></div>
 </div>
 </section>
@@ -261,7 +267,7 @@ const initial={career:0,integrity:0,wellness:0,days:30,path:'Undecided',resume:'
 let s={...initial};
 let past=[],currentId='start',startTime=Date.now(),elapsedFinal=null;
 const scenes={
-start:{part:'Person 1 • Mission One',title:'Commodore Crossroads',body:`<div class="eyebrow">Thirty days until graduation</div><h1>Choose Your Life<br>After Vanderbilt</h1><p>It is 11:57 p.m. The campus is quiet—too quiet. Your laptop flashes, your phone vibrates, and somewhere outside, a squirrel knocks over a trash can with the confidence of a tenured professor.</p><div class="message warning">UNKNOWN: “Thirty days. Three doors. One future. Every choice will follow you.”</div><p>Your mission is to graduate with a future, a conscience, and—if possible—your sanity.</p>`,choices:[['Begin the countdown','family']]},
+start:{part:'',title:'Commodore Crossroads',body:`<div class="eyebrow">Thirty days until graduation</div><h1>Choose Your Life<br>After Vanderbilt</h1><p>It is 11:57 p.m. The campus is quiet—too quiet. Your laptop flashes, your phone vibrates, and somewhere outside, a squirrel knocks over a trash can with the confidence of a tenured professor.</p><div class="message warning">UNKNOWN: “Thirty days. Three doors. One future. Every choice will follow you.”</div><p>Your mission is to graduate with a future, a conscience, and—if possible—your sanity.</p>`,choices:[['Begin the countdown','family']]},
 family:{part:'Passage 2 • The Pressure Call',title:'Your Family Is Calling',body:`<p>Your family asks the question every senior fears:</p><div class="message">“So…do you have a job yet?”</div><p>You stare at your unopened rejection emails. One subject line reads, “Exciting Update!” It was not exciting.</p>`,choices:[['Tell the truth: “I am still figuring it out.”','invitation',{integrity:2,wellness:1}],['Say, “Everything is under control.”','invitation',{career:1,integrity:-1}],['Promise you will become a lawyer or doctor','invitation',{wellness:-2,career:1}]]},
 invitation:{part:'Passage 3 • The Secret Invitation',title:'11:59 P.M.',body:`<p>A black envelope slides under your dorm-room door. On it is a gold Vanderbilt “V.”</p><div class="message warning">REPORT TO THE CAREER VAULT BEFORE MIDNIGHT.<br>BRING YOUR RÉSUMÉ.<br>COME ALONE.</div><p>You open the door. The hallway is empty. Even the RA has vanished—which, honestly, is the least believable part.</p>`,choices:[['Follow the gold arrows downstairs','resume'],['Call a friend and go together','resume',{friend:true,wellness:1}]]},
 resume:{part:'Passage 4 • The Résumé Test',title:'The Scanner Wants the Truth',body:`<p>A steel door blocks the basement. A scanner speaks:</p><div class="message">“One line on your résumé determines entry. Select carefully. This record cannot be erased.”</div>`,choices:[['Use only your real experience','vault',{resume:'honest',integrity:3}],['Make a small internship sound much bigger','vault',{resume:'exaggerated',career:2,integrity:-2}],['Invent an elite internship','vault',{resume:'fake',career:4,integrity:-5}]]},
@@ -295,7 +301,7 @@ function render(id){const x=scenes[id];const stats=[
   {name:'Career',value:s.career,max:20,image:'assets/images/career-chancellor.png',alt:'Vanderbilt chancellor',className:'icon-career'},
   {name:'Integrity',value:s.integrity,max:20,image:'assets/images/integrity-tower.png',alt:'Kirkland Hall tower',className:'icon-integrity'},
   {name:'Wellness',value:s.wellness,max:20,image:'assets/images/wellness-vumc.png',alt:'VUMC mark',className:'icon-wellness'}
-];document.getElementById('hud').innerHTML=`<div class="stat brand"><div class="stat-head"><img class="hud-icon icon-student" src="assets/images/student-alex-hormozi.png" alt="Student character"><span>Student</span></div><b>${s.path}</b></div>${stats.map(o=>`<div class="stat"><div class="stat-head"><img class="hud-icon ${o.className}" src="${o.image}" alt="${o.alt}"><span>${o.name}</span></div><b>${o.value}</b><div class="bar"><i style="width:${Math.max(0,Math.min(100,(o.value/o.max)*100))}%"></i></div></div>`).join('')}`;const choices=val(x.choices)||[];document.getElementById('stage').innerHTML=`<section class="card"><div class="eyebrow">${x.part}</div><h2 class="scene-title">${x.title}</h2>${val(x.body)}<div class="choices">${choices.map((c,i)=>`<button class="choice" data-i="${i}">${c[0]}${c[3]?`<small>${c[3]}</small>`:''}</button>`).join('')}</div></section>`;document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{const c=choices[+b.dataset.i];go(c[1],c[2]||{})});afterRender(id)}
+];document.getElementById('hud').innerHTML=`<div class="stat brand"><div class="stat-head"><img class="hud-icon icon-student" src="assets/images/student-alex-hormozi.png" alt="Student character"><span>Student</span></div><b>${s.path}</b></div>${stats.map(o=>`<div class="stat"><div class="stat-head"><img class="hud-icon ${o.className}" src="${o.image}" alt="${o.alt}"><span>${o.name}</span></div><b>${o.value}</b><div class="bar"><i style="width:${Math.max(0,Math.min(100,(o.value/o.max)*100))}%"></i></div></div>`).join('')}`;const choices=val(x.choices)||[];document.getElementById('stage').innerHTML=`<section class="card">${x.part?`<div class="eyebrow">${x.part}</div>`:''}<h2 class="scene-title">${x.title}</h2>${val(x.body)}<div class="choices">${choices.map((c,i)=>`<button class="choice" data-i="${i}">${c[0]}${c[3]?`<small>${c[3]}</small>`:''}</button>`).join('')}</div></section>`;document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{const c=choices[+b.dataset.i];go(c[1],c[2]||{})});afterRender(id)}
 render('start');
 
 /* ===================== Community features (feedback, leaderboard, resources) ===================== */
@@ -400,25 +406,35 @@ async function renderFeedbackPanel(){var el=document.getElementById('panel-feedb
  try{var rows=await api('feedback?status=eq.approved&order=created_at.desc&limit=50');el.innerHTML=head+(rows.length?rows.map(feedbackItem).join(''):'<div class="item"><em>No approved feedback yet.</em></div>');gal();wireReports(el)}catch(e){el.innerHTML=head+'<div class="item err">Could not load feedback right now.</div>';gal()}}
 function feedbackItem(r){return '<div class="item"><div>'+esc(r.body)+'</div><div class="meta"><span class="who">'+(r.display_name?esc(r.display_name):'Anonymous')+'</span><button class="report-btn" data-table="feedback" data-id="'+esc(r.id)+'">Report</button></div></div>'}
 
-/* --- leaderboard panel --- */
+/* --- Hall of Shame (genuine, moderated Vanderbilt-improvement submissions only) --- */
+function fmtDate(iso){try{return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}catch(e){return ''}}
+function wireReacts(scope){(scope||document).querySelectorAll('.react-btn[data-id]').forEach(function(b){b.onclick=function(){reactItem(b.dataset.id,b)}})}
+async function reactItem(id,btn){if(!BACKEND_READY)return;if(!throttleOk('react_'+id,4000))return;
+ try{await api('rpc/react_feedback',{method:'POST',body:{p_id:id}});markThrottle('react_'+id);var rc=btn.querySelector('.rc');if(rc)rc.textContent=String((parseInt(rc.textContent||'0',10)||0)+1);btn.disabled=true}catch(e){}}
+function shameItem(r){return '<div class="item"><div>'+esc(r.body)+'</div><div class="meta"><span class="who">'+(r.display_name?esc(r.display_name):'Anonymous Commodore')+' · '+esc(fmtDate(r.created_at))+'</span><span class="item-actions"><button class="react-btn" data-id="'+esc(r.id)+'" aria-label="React">▲ <span class="rc">'+(Number(r.reactions)||0)+'</span></button><button class="report-btn" data-table="feedback" data-id="'+esc(r.id)+'">Report</button></span></div></div>'}
+var shameView='recent';
+async function renderShamePanel(){var el=document.getElementById('panel-shame');if(!el)return;
+ var head='<p class="panel-title">Hall of Shame</p><div class="seg"><button data-v="recent" aria-pressed="'+(shameView==='recent')+'">Recent</button><button data-v="reacted" aria-pressed="'+(shameView==='reacted')+'">Most Reacted</button></div>';
+ var empty='<div class="item"><em>The Hall of Shame is empty—for now.</em></div>';
+ function wire(){el.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){shameView=b.dataset.v;renderShamePanel()}});wireReports(el);wireReacts(el)}
+ if(!BACKEND_READY){el.innerHTML=head+empty+'<p class="note">Submissions are disabled until the secure backend is configured (missing <code>BACKEND.url</code> and <code>BACKEND.anonKey</code> — see BACKEND_SETUP.md). Approved responses appear here only after moderation.</p>';wire();return}
+ el.innerHTML=head+'<div class="note">Loading…</div>';
+ try{var order=shameView==='reacted'?'reactions.desc,created_at.desc':'created_at.desc';var rows=await api('feedback?status=eq.approved&order='+order+'&limit=50');
+  el.innerHTML=head+(rows.length?rows.map(shameItem).join(''):empty)+'<p class="note">Moderated player ideas for improving Vanderbilt. Only approved responses are shown.</p>';wire()}
+ catch(e){el.innerHTML=head+'<div class="item err">Could not load the Hall of Shame right now.</div>';wire()}}
+
+/* --- Game Rankings (game scores only; kept separate from criticism) --- */
 var lbView='top';
-var LB_DEMO=[
- {display_name:'AnchorAda',score:34,path:'Medicine & Research',doing_now:'NIH research fellow'},
- {display_name:'GoldRush22',score:31,path:'Finance & Consulting',doing_now:'Analyst in Nashville'},
- {display_name:'CommodoreK',score:28,path:'Law',doing_now:'Public-interest law clerk'},
- {display_name:'DoreDreamer',score:24,path:'Medicine & Research',doing_now:'Gap-year EMT'},
- {display_name:'VandyVoyager',score:19,path:'Finance & Consulting',doing_now:'Founder, campus startup'}
-];
-async function renderLeaderboardPanel(){var el=document.getElementById('panel-leaderboard');if(!el)return;
- var head='<p class="panel-title">Leaderboard'+(BACKEND_READY?'':'<span class="demo-badge">Demo</span>')+'</p><div class="seg"><button data-v="top" aria-pressed="'+(lbView==='top')+'">Top</button><button data-v="recent" aria-pressed="'+(lbView==='recent')+'">Recent</button></div>';
- var foot='<p class="note">Rank · name · score · career path · what they’re doing now. Ranked by score; time is a tie-breaker only.</p>';
- function wire(){el.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){lbView=b.dataset.v;renderLeaderboardPanel()}});var d=document.getElementById('delReq');if(d)d.onclick=requestDeletionFlow;wireReports(el)}
- if(!BACKEND_READY){var rows=LB_DEMO.slice();if(lbView==='recent')rows.reverse();
-  el.innerHTML=head+rows.map(function(r,i){return lbRow(r,lbView==='top'?i+1:null)}).join('')+'<p class="note"><em>Sample data (demo).</em> Real entries appear once the backend is configured; finish the game to preview the opt-in form.</p>'+foot;wire();return}
+async function renderRankingsPanel(){var el=document.getElementById('panel-rankings');if(!el)return;
+ var head='<p class="panel-title">Game Rankings</p><div class="seg"><button data-v="top" aria-pressed="'+(lbView==='top')+'">Top</button><button data-v="recent" aria-pressed="'+(lbView==='recent')+'">Recent</button></div>';
+ var foot='<p class="note">Game scores only — rank · name · score · career path · what they’re doing now. Ranked by score; time is a tie-breaker.</p>';
+ var empty='<div class="item"><em>No game rankings yet. Finish the game to add yours.</em></div>';
+ function wire(){el.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){lbView=b.dataset.v;renderRankingsPanel()}});var d=document.getElementById('delReq');if(d)d.onclick=requestDeletionFlow;wireReports(el)}
+ if(!BACKEND_READY){el.innerHTML=head+empty+'<p class="note">Submissions are disabled until the secure backend is configured (see BACKEND_SETUP.md).</p>'+foot;wire();return}
  el.innerHTML=head+'<div class="note">Loading…</div>';
  try{var order=lbView==='top'?'score.desc,elapsed_ms.asc':'created_at.desc';var rows2=await api('leaderboard_public?status=eq.approved&order='+order+'&limit=25');
-  el.innerHTML=head+(rows2.length?rows2.map(function(r,i){return lbRow(r,lbView==='top'?i+1:null)}).join(''):'<div class="item"><em>No entries yet.</em></div>')+foot+'<button class="report-btn" id="delReq">Request deletion of my entry</button>';wire()}
- catch(e){el.innerHTML=head+'<div class="item err">Could not load the leaderboard right now.</div>'+foot;wire()}}
+  el.innerHTML=head+(rows2.length?rows2.map(function(r,i){return lbRow(r,lbView==='top'?i+1:null)}).join(''):empty)+foot+'<button class="report-btn" id="delReq">Request deletion of my entry</button>';wire()}
+ catch(e){el.innerHTML=head+'<div class="item err">Could not load rankings right now.</div>'+foot;wire()}}
 function lbRow(r,rank){return '<div class="lb-row"><div class="lb-rank">'+(rank?('#'+rank):'•')+'</div><div class="lb-main"><div class="lb-name">'+esc(r.display_name)+'</div><div class="lb-sub">'+esc(r.path||'—')+(r.doing_now?' · '+esc(r.doing_now):'')+'</div></div><div class="lb-score">'+Number(r.score)+'</div><button class="report-btn" data-table="leaderboard" data-id="'+esc(r.id)+'">Report</button></div>'}
 async function requestDeletionFlow(){var token=prompt('Paste the deletion code you saved when you joined the leaderboard:');if(!token)return;
  if(!BACKEND_READY){alert('Demo mode: entry deletion runs once the backend is configured.');return}
@@ -441,13 +457,13 @@ function afterRender(id){if(id==='graduation'){var card=document.querySelector('
 function renderLeaderboardOptin(card){if(card.querySelector('.lb-optin'))return;
  var score=scoreValue();if(elapsedFinal==null)elapsedFinal=Date.now()-startTime;var secs=Math.max(0,Math.round(elapsedFinal/1000));
  var div=document.createElement('div');div.className='lb-optin';
- div.innerHTML='<h3>Join the Leaderboard <span class="note" style="font-weight:400;display:inline">(optional)</span></h3>'+
+ div.innerHTML='<h3>Join the Game Rankings <span class="note" style="font-weight:400;display:inline">(optional)</span></h3>'+
   '<p class="note">Participation is optional and requires your consent. We never collect emails, student IDs, exact locations, or legal names. You can keep playing without joining.</p>'+
   '<div class="field"><label>Your score (auto)</label><div class="lb-score">'+score+' <span class="note" style="display:inline">Career '+s.career+' · Integrity '+s.integrity+' · Wellness '+s.wellness+' · Path: '+esc(s.path)+' · Time '+secs+'s</span></div></div>'+
   '<div class="field"><label for="lbName">Display name<span class="counter" id="lbNameCount">0/24</span></label><input type="text" id="lbName" maxlength="24" placeholder="e.g., AnchorDown24"></div>'+
   '<div class="field"><label for="lbDoing">What are you doing now?<span class="counter" id="lbDoingCount">0/140</span></label><textarea id="lbDoing" maxlength="140" rows="2" placeholder="e.g., Exploring nonprofit fellowships"></textarea></div>'+
   '<label class="consent"><input type="checkbox" id="lbConsent"><span>I consent to publicly display my display name, score, career path, and answer after moderation. I understand no email, ID, or legal name is collected.</span></label>'+
-  '<button class="vu-btn" id="lbSubmit" type="button" disabled>Submit to leaderboard</button>'+
+  '<button class="vu-btn" id="lbSubmit" type="button" disabled>Submit to Game Rankings</button>'+
   '<div class="form-msg" id="lbMsg" hidden></div>';
  card.appendChild(div);
  var name=div.querySelector('#lbName'),doing=div.querySelector('#lbDoing'),consent=div.querySelector('#lbConsent'),btn=div.querySelector('#lbSubmit'),msg=div.querySelector('#lbMsg');
@@ -460,10 +476,10 @@ function renderLeaderboardOptin(card){if(card.querySelector('.lb-optin'))return;
   if(!(score>=SCORE_MIN&&score<=SCORE_MAX)){msg.className='form-msg err';msg.textContent='Score failed integrity validation.';return}
   if(!throttleOk('lb_last',60000)){msg.className='form-msg err';msg.textContent='Please wait a moment before submitting again.';return}
   var token=Math.random().toString(36).slice(2)+Date.now().toString(36);
-  if(!BACKEND_READY){msg.className='form-msg ok';msg.innerHTML='<strong>Demo mode.</strong> Your entry passed validation and would be queued for moderation once the backend is configured. Nothing was stored.';return}
+  if(!BACKEND_READY){msg.className='form-msg err';msg.innerHTML='Not stored: the secure backend is not configured yet (missing BACKEND.url and BACKEND.anonKey — see BACKEND_SETUP.md). Your entry passed validation but was not saved.';return}
   btn.disabled=true;
   try{await api('leaderboard',{method:'POST',body:{display_name:v.clean,score:score,path:s.path,doing_now:doingClean,elapsed_ms:elapsedFinal,delete_token:token,status:'pending'}});markThrottle('lb_last');lsSet('lb_delete_token',token);
-   msg.className='form-msg ok';msg.innerHTML='Submitted for moderation. <strong>Save this deletion code</strong> to remove your entry later: <code>'+esc(token)+'</code>';renderLeaderboardPanel()}
+   msg.className='form-msg ok';msg.innerHTML='Submitted for moderation. <strong>Save this deletion code</strong> to remove your entry later: <code>'+esc(token)+'</code>';renderRankingsPanel()}
   catch(e){msg.className='form-msg err';msg.textContent='Submission failed. Please try again later.';btn.disabled=false}
  });
 }
@@ -516,7 +532,7 @@ function openImageModal(p){var ov=document.createElement('div');ov.className='mo
 function toggleUpload(w){if(!w)return;
  if(w.dataset.open){w.dataset.open='';w.hidden=true;w.innerHTML='';return}
  w.dataset.open='1';w.hidden=false;
- w.innerHTML='<div class="up-form"><p class="note"><span class="demo-badge">Demo</span> Uploads are moderated and are <strong>not published automatically</strong>. In demo mode nothing is uploaded or stored — your image stays in your browser only.</p><input type="file" id="upFile" accept="image/png,image/jpeg,image/webp,image/gif"><div id="upPreview" class="up-preview" hidden></div><label class="consent"><input type="checkbox" id="upOwn"> I confirm I own this image or have permission to share it, and it contains no private information.</label><button class="vu-btn" id="upSubmit" type="button" disabled>Submit for moderation (demo)</button><div class="form-msg" id="upMsg" hidden></div></div>';
+ w.innerHTML='<div class="up-form"><p class="note">Uploads are moderated and are <strong>not published automatically</strong>. Until secure storage is configured, nothing is uploaded or stored — your image stays in your browser only.</p><input type="file" id="upFile" accept="image/png,image/jpeg,image/webp,image/gif"><div id="upPreview" class="up-preview" hidden></div><label class="consent"><input type="checkbox" id="upOwn"> I confirm I own this image or have permission to share it, and it contains no private information.</label><button class="vu-btn" id="upSubmit" type="button" disabled>Submit for moderation</button><div class="form-msg" id="upMsg" hidden></div></div>';
  var file=w.querySelector('#upFile'),prev=w.querySelector('#upPreview'),own=w.querySelector('#upOwn'),sub=w.querySelector('#upSubmit'),msg=w.querySelector('#upMsg');var okFile=false;
  function updSub(){sub.disabled=!(okFile&&own.checked)}
  file.addEventListener('change',function(){msg.hidden=true;prev.hidden=true;prev.innerHTML='';okFile=false;updSub();
@@ -525,12 +541,44 @@ function toggleUpload(w){if(!w)return;
   if(f.size>5*1024*1024){msg.hidden=false;msg.className='form-msg err';msg.textContent='File too large (max 5 MB).';return}
   var url=URL.createObjectURL(f);prev.hidden=false;prev.innerHTML='<img src="'+url+'" alt="Preview of your image">';okFile=true;updSub()});
  own.addEventListener('change',updSub);
- sub.addEventListener('click',function(){if(!(okFile&&own.checked))return;msg.hidden=false;msg.className='form-msg ok';msg.innerHTML='<strong>Demo mode.</strong> Your image passed format &amp; size checks and would be queued for moderation once secure storage is configured. Nothing was uploaded or saved.';sub.disabled=true})}
+ sub.addEventListener('click',function(){if(!(okFile&&own.checked))return;msg.hidden=false;msg.className='form-msg err';msg.innerHTML='Not stored: secure image storage is not configured yet (see BACKEND_SETUP.md). Your image passed format &amp; size checks but was not uploaded.';sub.disabled=true})}
 /* --- responsive section tabs (mobile) --- */
 function initSectionTabs(){var tabs=[].slice.call(document.querySelectorAll('.sec-tab'));if(!tabs.length)return;
  function show(id){document.querySelectorAll('.app-grid .col').forEach(function(c){c.classList.toggle('active',c.id===id)});tabs.forEach(function(t){t.setAttribute('aria-selected',t.dataset.sec===id?'true':'false')})}
  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.sec)})});show('secGame')}
-function initFeatures(){initTabs();renderLeaderboardPanel();renderResourcesPanel();renderGallery();initSectionTabs();var bb=document.getElementById('backBtn');if(bb)bb.addEventListener('click',back);updateBackBtn();initModeration()}
+/* --- Back-button modal: submit a Vanderbilt-improvement idea to unlock the previous choice --- */
+function openBackModal(){if(!past.length)return;
+ var ov=document.createElement('div');ov.className='mod-overlay';ov.id='backModal';
+ ov.innerHTML='<div class="mod-card"><button class="mod-close" aria-label="Close">×</button>'+
+  '<h3 style="margin:0 0 6px">Before You Go Back…</h3>'+
+  '<p class="note" style="margin:0 0 10px">Share one thing Vanderbilt could improve to unlock your previous choice.</p>'+
+  '<div class="field"><label for="bkText">Your suggestion<span class="counter" id="bkCount">0/200</span></label><textarea id="bkText" maxlength="200" rows="3" placeholder="One constructive idea…"></textarea></div>'+
+  '<div class="field"><label for="bkName">Display name (optional)</label><input type="text" id="bkName" maxlength="24" value="Anonymous Commodore"></div>'+
+  '<label class="consent"><input type="checkbox" id="bkConsent"> I understand that my moderated response may appear publicly in the Hall of Shame.</label>'+
+  '<p class="note"><strong>Privacy:</strong> do not include names, student IDs, contact details, or other personal information, and do not target identifiable people.</p>'+
+  (BACKEND_READY?'':'<div class="form-msg err" style="margin-top:6px">Submissions are disabled until the secure backend is configured (missing BACKEND.url and BACKEND.anonKey — see BACKEND_SETUP.md). You can still go back.</div>')+
+  '<div class="res-actions" style="margin-top:10px"><button class="vu-btn" id="bkSubmit" type="button"'+(BACKEND_READY?'':' disabled')+'>Submit &amp; Go Back</button>'+(BACKEND_READY?'':'<button class="vu-btn ghost" id="bkSkip" type="button">Go Back</button>')+'</div>'+
+  '<div class="form-msg" id="bkMsg" hidden></div></div>';
+ document.body.appendChild(ov);
+ var text=ov.querySelector('#bkText'),cnt=ov.querySelector('#bkCount'),name=ov.querySelector('#bkName'),consent=ov.querySelector('#bkConsent'),sub=ov.querySelector('#bkSubmit'),msg=ov.querySelector('#bkMsg'),skip=ov.querySelector('#bkSkip');
+ function close(){ov.remove()}
+ ov.addEventListener('click',function(e){if(e.target===ov)close()});
+ ov.querySelector('.mod-close').onclick=close;
+ document.addEventListener('keydown',function k(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',k)}});
+ text.addEventListener('input',function(){cnt.textContent=text.value.length+'/200'});
+ if(skip)skip.onclick=function(){close();back()};
+ sub.addEventListener('click',async function(){msg.hidden=false;msg.className='form-msg';
+  var m=moderateText(text.value,{maxLen:200});if(!m.ok){msg.className='form-msg err';msg.textContent=m.reason;return}
+  if(!consent.checked){msg.className='form-msg err';msg.textContent='Please check the box to acknowledge public moderation.';return}
+  var disp=(name.value||'').trim()||'Anonymous Commodore';var vn=validName(disp);if(!vn.ok){msg.className='form-msg err';msg.textContent=vn.reason;return}
+  if(!BACKEND_READY){return}
+  if(!throttleOk('bk_last',30000)){msg.className='form-msg err';msg.textContent='Please wait a moment before submitting again.';return}
+  var h=hashStr(m.clean+'|'+disp);if(h===lsGet('bk_hash')){msg.className='form-msg err';msg.textContent='This looks like a duplicate of your last submission.';return}
+  sub.disabled=true;
+  try{await api('feedback',{method:'POST',body:{body:m.clean,display_name:disp,status:'pending'}});markThrottle('bk_last');lsSet('bk_hash',h);renderShamePanel();close();back()}
+  catch(e){msg.className='form-msg err';msg.textContent='Submission failed. Please try again later.';sub.disabled=false}});
+ setTimeout(function(){text.focus()},30);}
+function initFeatures(){initTabs();renderShamePanel();renderRankingsPanel();renderResourcesPanel();renderGallery();initSectionTabs();var bb=document.getElementById('backBtn');if(bb)bb.addEventListener('click',openBackModal);updateBackBtn();initModeration()}
 window.addEventListener('hashchange',initModeration);
 initFeatures();
 </script></body></html>

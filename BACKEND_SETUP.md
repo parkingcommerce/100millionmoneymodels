@@ -32,11 +32,12 @@ language sql stable security definer set search_path = public as $$
   select coalesce((select is_admin from public.profiles where id = auth.uid()), false);
 $$;
 
--- ============ feedback ============
+-- ============ feedback  (powers the "Hall of Shame": moderated Vanderbilt-improvement ideas) ============
 create table if not exists public.feedback (
   id uuid primary key default gen_random_uuid(),
-  body text not null check (char_length(body) between 3 and 280),
+  body text not null check (char_length(body) between 3 and 200),
   display_name text check (display_name is null or char_length(display_name) <= 24),
+  reactions int not null default 0 check (reactions >= 0),
   status text not null default 'pending' check (status in ('pending','approved','rejected')),
   created_at timestamptz not null default now()
 );
@@ -45,14 +46,22 @@ alter table public.feedback enable row level security;
 -- anon/public may read ONLY approved rows
 create policy "read approved feedback" on public.feedback
   for select to anon, authenticated using (status = 'approved');
--- anyone may insert, but the row is FORCED to 'pending' (no self-approval)
+-- anyone may insert, but the row is FORCED to 'pending' with 0 reactions (no self-approval)
 create policy "insert pending feedback" on public.feedback
-  for insert to anon, authenticated with check (status = 'pending');
+  for insert to anon, authenticated with check (status = 'pending' and reactions = 0);
 -- admins can read everything and change status
 create policy "admin read feedback" on public.feedback
   for select to authenticated using (public.is_admin());
 create policy "admin update feedback" on public.feedback
   for update to authenticated using (public.is_admin()) with check (true);
+
+-- Anonymous reactions: increment only on APPROVED rows via a definer function (no direct update grant).
+create or replace function public.react_feedback(p_id uuid)
+returns void language sql security definer set search_path = public as $$
+  update public.feedback set reactions = reactions + 1 where id = p_id and status = 'approved';
+$$;
+revoke all on function public.react_feedback(uuid) from public;
+grant execute on function public.react_feedback(uuid) to anon, authenticated;
 
 -- ============ leaderboard ============
 create table if not exists public.leaderboard (
