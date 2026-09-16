@@ -17,7 +17,7 @@
     #app{position:relative;z-index:1;max-width:980px;margin:auto;padding:0 22px 56px}
     .vu-header{background:var(--vu-black);color:#fff;margin:18px 0 24px;padding:24px 28px;border-radius:4px;border-bottom:3px solid var(--vu-gold);box-shadow:var(--shadow-md)}
     .vu-brandbar{display:flex;align-items:center;gap:14px;padding-bottom:13px;border-bottom:1px solid rgba(180,146,72,.55)}
-    .vu-v{font-family:var(--serif);font-weight:400;font-size:2.5rem;line-height:.8;background:linear-gradient(180deg,#efd79b 0%,#c9a94f 45%,#b49248 60%,#7f632f 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:2px}
+    .vu-logo{height:52px;width:auto;display:block;flex:0 0 auto}
     .vu-wordmark{font-family:var(--serif);font-size:1.5rem;letter-spacing:.16em;text-transform:uppercase;color:#f4efe4;font-weight:400}
     .vu-titles{margin-top:15px}
     .vu-gametitle{font-family:var(--serif);font-size:clamp(1.9rem,4.4vw,3rem);color:#fff;font-weight:400;line-height:1.04;margin:0;letter-spacing:.005em}
@@ -50,7 +50,7 @@
     .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0}.score-box{text-align:center;padding:24px 12px;background:#fff;border:1px solid var(--border);border-top:3px solid var(--vu-gold);border-radius:4px;box-shadow:var(--shadow-sm);font-family:var(--sans);font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}.score-box b{display:block;font-family:var(--serif);font-size:2.4rem;color:var(--ink);font-weight:400;margin-bottom:5px;letter-spacing:.01em}
     .vu-footer{margin:30px 0 0;padding:20px 6px 0;border-top:1px solid var(--border);color:var(--muted);font-family:var(--sans);font-size:.82rem;line-height:1.5;text-align:center}
     .pulse{animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.45}}
-    @media(max-width:650px){#app{padding:0 10px 40px}.vu-header{padding:18px 18px;margin:14px 0 18px}.vu-brandbar{gap:11px}.vu-v{font-size:2rem}.vu-wordmark{font-size:1.12rem;letter-spacing:.12em}.hud-wrap{padding:16px 8px 14px;top:8px}.hud{gap:6px}.hud-icon{width:60px;height:60px;flex-basis:60px;border-width:2px;box-shadow:0 0 0 3px #f1e8d5}.stat{font-size:.5rem;letter-spacing:.06em}.stat-head{gap:6px}.stat b{font-size:.95rem}.bar{height:5px}.card{padding:24px 18px}.choice{padding:14px 15px 14px 40px;font-size:.95rem}.choice:before{left:15px;top:14px}.score-grid{grid-template-columns:1fr;gap:10px}}
+    @media(max-width:650px){#app{padding:0 10px 40px}.vu-header{padding:18px 18px;margin:14px 0 18px}.vu-brandbar{gap:11px}.vu-logo{height:42px}.vu-wordmark{font-size:1.12rem;letter-spacing:.12em}.hud-wrap{padding:16px 8px 14px;top:8px}.hud{gap:6px}.hud-icon{width:60px;height:60px;flex-basis:60px;border-width:2px;box-shadow:0 0 0 3px #f1e8d5}.stat{font-size:.5rem;letter-spacing:.06em}.stat-head{gap:6px}.stat b{font-size:.95rem}.bar{height:5px}.card{padding:24px 18px}.choice{padding:14px 15px 14px 40px;font-size:.95rem}.choice:before{left:15px;top:14px}.score-grid{grid-template-columns:1fr;gap:10px}}
     /* ===== Community features: layout, sidebar, forms, resources ===== */
     #app{max-width:1240px}
     .shell{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:28px;align-items:start}
@@ -141,7 +141,7 @@
   </style>
 </head>
 <body><div id="app">
-<header class="vu-header"><div class="vu-brandbar"><span class="vu-v">V</span><span class="vu-wordmark">Vanderbilt University</span></div><div class="vu-titles"><div class="vu-gametitle">Commodore Crossroads</div><p class="vu-tagline">An Interactive Career Journey</p></div></header>
+<header class="vu-header"><div class="vu-brandbar"><img class="vu-logo" src="assets/images/vanderbilt-star.png" alt="Vanderbilt star logo"><span class="vu-wordmark">Vanderbilt University</span></div><div class="vu-titles"><div class="vu-gametitle">Commodore Crossroads</div><p class="vu-tagline">An Interactive Career Journey</p></div></header>
 <div class="shell">
 <div class="game-col">
 <div class="hud-wrap"><div class="hud" id="hud"></div></div>
