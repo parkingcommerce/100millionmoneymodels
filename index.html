@@ -512,7 +512,7 @@ function modItem(table,r,text){return '<div class="item"><div>'+esc(text)+'</div
 async function setStatus(table,id,status){try{await api(table+'?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:{status:status},token:adminToken});loadQueue()}catch(e){alert('Update failed.')}}
 
 /* --- auto-rotating gallery (images change automatically) --- */
-const GALLERY=['assets/images/gallery-1.png','assets/images/gallery-2.png'];
+const GALLERY=['assets/images/gallery-1.png','assets/images/gallery-2.png','assets/images/gallery-3.png'];
 GALLERY.forEach(function(src){var i=new Image();i.src=src});
 function initGallery(el){if(!el||el.dataset.init)return;el.dataset.init='1';el.classList.add('gallery');
  var i=0;var img=document.createElement('img');img.className='gal-img';img.alt='Commodore Crossroads gallery';img.src=GALLERY[0];el.appendChild(img);
@@ -525,6 +525,7 @@ var GALLERY_PHOTOS=[
  {src:'assets/images/wellness-vumc.png',cap:'VUMC'},
  {src:'assets/images/career-chancellor.png',cap:'Leadership'},
  {src:'assets/images/gallery-2.png',cap:'On the road'},
+ {src:'assets/images/gallery-3.png',cap:'GTA 6'},
  {src:'assets/images/vanderbilt-star.png',cap:'Commodore star'}
 ];
 function renderGallery(){var el=document.getElementById('galleryCard');if(!el)return;
