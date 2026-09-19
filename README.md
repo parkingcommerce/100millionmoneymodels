@@ -1,44 +1,66 @@
 # Commodore Crossroads: Choose Your Life After Vanderbilt
 
-This folder contains a complete playable prototype for the Interactive Digital Narrative Project. Its presentation uses only black, gold, and white, with one consistent minimal sans-serif typeface throughout.
+An original **Twine 2 / SugarCube 2.37.3** interactive story (20 passages) about post-graduation career ethics at Vanderbilt. One source builds the GitHub Pages game and the Twine import file—the same game, not two separate versions.
 
-## Run the game
+**Topic:** Choose Your Life After Vanderbilt — career pressure, integrity, wellness, and ethical tradeoffs.
 
-Open `index.html` in a browser. No installation or internet connection is required.
+## Play the game
 
-## Publish with GitHub Pages
+- **Online:** GitHub Pages (after deploy)
+- **Offline:** open `index.html` in a browser with the `assets/` folder beside it
 
-1. Create a new empty GitHub repository.
-2. Upload everything inside this folder to the repository root.
-3. Make sure the default branch is named `main`.
-4. Open **Settings → Pages** in GitHub.
-5. Under **Build and deployment**, select **GitHub Actions**.
-6. Push a change or run the “Deploy GitHub Pages” workflow manually.
-7. GitHub will provide the public project link after deployment finishes.
+## Import into Twine 2
 
-Do not upload only `index.html`; keep `.github`, `assets`, `.nojekyll`, and the credit files too.
+**Do not import the GitHub repository ZIP into Twine.** Extract it first.
 
-## Group division
+1. GitHub → **Code → Download ZIP** → **extract**
+2. Twine 2 → **Library → Import**
+3. Select **`Commodore-Crossroads.html`**
 
-- Person 1: Passages 1–6 — opening mystery, family pressure, résumé ethics, Career Vault.
-- Person 2: Passages 7–14 — three career branches, waiting-room mission, interview, rejection, secret offer.
-- Person 3: Passages 15–20 — background-check consequences, final decisions, endings, reflection and testing.
+See **[TWINE_WORKFLOW.md](TWINE_WORKFLOW.md)** for editing in Twine, syncing back to git, asset behavior, and a manual verification checklist.
 
-## Move it into Twine
+See **[ASSIGNMENT_AUDIT.md](ASSIGNMENT_AUDIT.md)** for passage count, pathways, ethics, multimedia, and reflection/bibliography compliance.
 
-The prototype already behaves like a Twine story. To recreate it in Twine:
+See **[PLAYTHROUGHS.md](PLAYTHROUGHS.md)** for three documented start-to-ending routes.
 
-1. Create a new story using the **SugarCube 2** format.
-2. Create passages using the titles shown inside the game.
-3. Copy each scene's narrative text and choices from `index.html` or the planning sheet.
-4. Use story variables for `$career`, `$integrity`, `$wellness`, `$path`, `$resume`, and `$prepared`.
-5. Export the finished Twine story as HTML, test every branch, and publish that HTML through itch.io or GitHub Pages.
+## One authoritative source
 
-## Before submission
+| Edit this | Purpose |
+| --- | --- |
+| `story/Passages.twee` | Passage text, choices, state changes |
+| `story/Head.twee` | Metadata, StoryInit variables |
+| `source/stylesheet.css` | Vanderbilt UI |
+| `source/script.js` | HUD, Hall of Shame, gallery, resources, sounds |
+| `assets/images/` | Source PNGs (embedded into HTML at build for Twine portability) |
 
-- Replace “Person 1/2/3” with the members' names.
-- Expand the bibliography with every image, sound, video, or factual source used.
-- Ask each member to play at least two routes.
-- Confirm that every link works and that the final reflection is included.
-- Let only the designated group leader submit the final working link.
-- Add every image and audio source to `MEDIA_CREDITS.md`.
+```bash
+python3 scripts/build-story.py          # build index.html + import files
+python3 scripts/audit-story.py          # assignment checklist
+python3 scripts/import-from-html.py FILE.html  # pull Twine edits back into story/
+python3 scripts/verify-import-roundtrip.py     # verify import preserves edits
+```
+
+**Why SugarCube?** Harlowe cannot support this project's custom dashboard, JavaScript panels, or multimedia UI. SugarCube is the correct Twine format for passages plus custom CSS/JS.
+
+## Internet and backend requirements
+
+| Feature | Offline? | Notes |
+| --- | --- | --- |
+| Story passages & choices | Yes | Core game |
+| HUD / gallery images | Yes | Embedded at build; `assets/images/` kept as source |
+| Google Fonts | No | Loaded from CDN |
+| Resources (YouTube) | No | Requires internet |
+| Immersion Sounds | No | YouTube audio, opt-in; requires internet |
+| Hall of Shame / Rankings | Partial | Empty offline; live data requires internet + Supabase (`BACKEND_SETUP.md`) |
+
+HUD and gallery images work in **Twine Test/Play** and **Publish to File** (embedded PNGs). YouTube resources and the live leaderboard require internet.
+
+## GitHub Pages
+
+Push to `main`. The workflow runs `python3 scripts/build-story.py` then deploys.
+
+## Team
+
+- **Zhaoyu Wang:** Passages 1–6
+- **Carlyn Sharp:** Passages 7–14
+- **Mohammad Ibrahim:** Passages 15–20, build & testing
