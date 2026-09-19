@@ -865,9 +865,9 @@ function openBackModal(){if(!past.length)return;
  var ov=document.createElement('div');ov.className='mod-overlay';ov.id='backModal';
  ov.innerHTML='<div class="mod-card"><button class="mod-close" aria-label="Close">×</button>'+
   '<h3 style="margin:0 0 6px">Before You Go Back…</h3>'+
-  '<p class="note" style="margin:0 0 10px">Say one bad thing about Vanderbilt to go back.</p>'+
+  '<p class="note" style="margin:0 0 10px">Say one <span style="font-size:2.6rem;font-weight:800;color:#7a2417;letter-spacing:.01em;line-height:1;display:inline-block;vertical-align:middle">Bad</span> thing about Vanderbilt to go back.</p>'+
   '<div class="field"><label for="bkText">One bad thing about Vanderbilt<span class="counter" id="bkCount">0/200</span></label><textarea id="bkText" maxlength="200" rows="3" placeholder="One bad thing about Vanderbilt…"></textarea></div>'+
-  '<div class="res-actions" style="margin-top:10px"><button class="vu-btn" id="bkContinue" type="button" disabled>Continue</button></div></div>';
+  '<div class="res-actions" style="margin-top:10px"><button class="vu-btn" id="bkContinue" type="button" disabled>Submit &amp; Shame</button></div></div>';
  document.body.appendChild(ov);
  var text=ov.querySelector('#bkText'),cnt=ov.querySelector('#bkCount'),go=ov.querySelector('#bkContinue');
  function close(){ov.remove()}
