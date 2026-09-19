@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Commodore Crossroads</title>
+</head>
+<body>
+<tw-storydata name="Commodore Crossroads" startnode="1" creator="Twine" creator-version="2.10.0" format="Harlowe" format-version="3.3.7" ifid="8F3C2A16-7D94-4B0E-9C1A-2E5D6F7A8B9C" options="" tags="" zoom="1" hidden>
+<style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style>
+<script role="script" id="twine-user-script" type="text/twine-javascript"></script>
+<tw-passagedata pid="1" name="start" tags="" position="100,100" size="100,100">(set: $career to 0, $integrity to 0, $wellness to 0, $days to 30, $path to &quot;Undecided&quot;, $resume to &quot;none&quot;, $prepared to false, $friend to false, $favor to false, $offer to &quot;none&quot;)30 days until graduation
+
+##Choose Your Life After Vanderbilt
+
+It is 11:57 p.m. The campus is quiet—too quiet. Your laptop flashes, your phone vibrates, and somewhere outside, a squirrel knocks over a trash can with the confidence of a tenured professor.
+
+//UNKNOWN: &quot;Thirty days. Three doors. One future. Every choice will follow you.&quot;//
+
+Your mission is to graduate with a future, a conscience, and—if possible—your sanity.
+
+[[Begin the countdown-&gt;family]]</tw-passagedata>
+<tw-passagedata pid="2" name="family" tags="" position="250,100" size="100,100">//Passage 2 • The Pressure Call//
+
+##Your Family Is Calling
+
+Your family asks the question every senior fears:
+
+//&quot;So…do you have a job yet?&quot;//
+
+You stare at your unopened rejection emails. One subject line reads, &quot;Exciting Update!&quot; It was not exciting.
+
+(link: &#39;Tell the truth: &quot;I am still figuring it out.&quot;&#39;)[(set: $integrity to $integrity + 2, $wellness to $wellness + 1)(go-to: &quot;invitation&quot;)]
+(link: &#39;Say, &quot;Everything is under control.&quot;&#39;)[(set: $career to $career + 1, $integrity to $integrity - 1)(go-to: &quot;invitation&quot;)]
+(link: &quot;Promise you will become a lawyer or doctor&quot;)[(set: $wellness to $wellness - 2, $career to $career + 1)(go-to: &quot;invitation&quot;)]</tw-passagedata>
+<tw-passagedata pid="3" name="invitation" tags="" position="400,100" size="100,100">//Passage 3 • The Secret Invitation//
+
+##11:59 P.M.
+
+A black envelope slides under your dorm-room door. On it is a gold Vanderbilt &quot;V.&quot;
+
+//REPORT TO THE CAREER VAULT BEFORE MIDNIGHT. BRING YOUR RÉSUMÉ. COME ALONE.//
+
+You open the door. The hallway is empty. Even the RA has vanished—which, honestly, is the least believable part.
+
+[[Follow the gold arrows downstairs-&gt;resume]]
+(link: &quot;Call a friend and go together&quot;)[(set: $friend to true, $wellness to $wellness + 1)(go-to: &quot;resume&quot;)]</tw-passagedata>
+<tw-passagedata pid="4" name="resume" tags="" position="550,100" size="100,100">//Passage 4 • The Résumé Test//
+
+##The Scanner Wants the Truth
+
+A steel door blocks the basement. A scanner speaks:
+
+//&quot;One line on your résumé determines entry. Select carefully. This record cannot be erased.&quot;//
+
+(link: &quot;Use only your real experience&quot;)[(set: $resume to &quot;honest&quot;, $integrity to $integrity + 3)(go-to: &quot;vault&quot;)]
+(link: &quot;Make a small internship sound much bigger&quot;)[(set: $resume to &quot;exaggerated&quot;, $career to $career + 2, $integrity to $integrity - 2)(go-to: &quot;vault&quot;)]
+(link: &quot;Invent an elite internship&quot;)[(set: $resume to &quot;fake&quot;, $career to $career + 4, $integrity to $integrity - 5)(go-to: &quot;vault&quot;)]</tw-passagedata>
+<tw-passagedata pid="5" name="vault" tags="" position="100,250" size="100,100">//Passage 5 • The Career Vault//
+
+##Three Doors. One Deadline.
+
+The door opens onto an impossible underground hall. Three elevators wait beneath flickering signs.
+
+THE COURTROOM • THE CORPORATE TOWER • THE RESEARCH LAB
+
+A voice whispers: &quot;Prestige has a price. Purpose has a price. Indecision also has a price—usually with interest.&quot;
+
+(link: &quot;Approach the three elevators&quot;)[(set: $days to $days - 3)(go-to: &quot;choose&quot;)]</tw-passagedata>
+<tw-passagedata pid="6" name="choose" tags="" position="250,250" size="100,100">//Passage 6 • Choose Your Mission//
+
+##Select Your Future
+
+The floor shakes. You have ten seconds before the elevators lock.
+
+00:10
+
+This choice opens your first career mission. It does not guarantee your ending.
+
+(link: &quot;Enter the Courtroom&quot;)[(set: $path to &quot;Law&quot;)(go-to: &quot;careerLaw&quot;)]
+(link: &quot;Enter the Corporate Tower&quot;)[(set: $path to &quot;Finance &amp; Consulting&quot;)(go-to: &quot;careerFinance&quot;)]
+(link: &quot;Enter the Research Laboratory&quot;)[(set: $path to &quot;Medicine &amp; Research&quot;)(go-to: &quot;careerResearch&quot;)]</tw-passagedata>
+<tw-passagedata pid="7" name="careerLaw" tags="" position="400,250" size="100,100">//Person 2 • Passage 7//
+
+##The Courtroom Mission
+
+A law firm offers you a final interview. Its salary could change your family&#39;s life. Then a confidential file appears: the firm is defending a corporation accused of poisoning a low-income neighborhood.
+
+//MISSION: Decide before the partner returns.//
+
+(link: &quot;Accept and say nothing&quot;)[(set: $career to $career + 3, $integrity to $integrity - 3)(go-to: &quot;submitted&quot;)]
+(link: &quot;Question the recruiter about the case&quot;)[(set: $career to $career + 1, $integrity to $integrity + 2)(go-to: &quot;submitted&quot;)]
+(link: &quot;Reject the firm and protect your values&quot;)[(set: $career to $career - 1, $integrity to $integrity + 4)(go-to: &quot;submitted&quot;)]</tw-passagedata>
+<tw-passagedata pid="8" name="careerFinance" tags="" position="550,250" size="100,100">//Person 2 • Passage 8//
+
+##The Corporate Tower
+
+A consulting firm offers a path toward a six-figure salary. An exhausted analyst traps you in the elevator.
+
+//&quot;The money is real. So are the 2 a.m. emails. Yesterday, I called my houseplant &#39;Mom.&#39;&quot;//
+
+(link: &quot;Chase the salary and prestige&quot;)[(set: $career to $career + 4, $wellness to $wellness - 3)(go-to: &quot;submitted&quot;)]
+(link: &quot;Investigate the company&#39;s practices&quot;)[(set: $career to $career + 1, $integrity to $integrity + 2)(go-to: &quot;submitted&quot;)]
+(link: &quot;Choose a smaller mission-driven firm&quot;)[(set: $career to $career + 1, $integrity to $integrity + 2, $wellness to $wellness + 2)(go-to: &quot;submitted&quot;)]</tw-passagedata>
+<tw-passagedata pid="9" name="careerResearch" tags="" position="100,400" size="100,100">//Person 2 • Passage 9//
+
+##The Locked Laboratory
+
+A professor offers you a prestigious research position. On the desk, you find notes proving another student created the original idea but received no credit.
+
+The professor&#39;s footsteps approach. You have seconds.
+
+(link: &quot;Accept the position and hide the notes&quot;)[(set: $career to $career + 4, $integrity to $integrity - 4)(go-to: &quot;submitted&quot;)]
+(link: &quot;Demand shared credit for the student&quot;)[(set: $career to $career + 1, $integrity to $integrity + 4)(go-to: &quot;submitted&quot;)]
+(link: &quot;Photograph the evidence and contact the student&quot;)[(set: $integrity to $integrity + 3, $wellness to $wellness + 1, $friend to true)(go-to: &quot;submitted&quot;)]</tw-passagedata>
+<tw-passagedata pid="10" name="submitted" tags="" position="250,400" size="100,100">//Passage 10 • Application Submitted//
+
+##Decision Pending
+
+APPLICATION STATUS: We received your materials. Twelve finalists remain. A decision will arrive after an internal review.
+
+Three days pass. Then four. Then five.
+
+Your roommate says, &quot;Maybe they are being thoughtful.&quot; Your inbox says nothing.
+
+(link: &quot;Enter the waiting room&quot;)[(set: $days to $days - 7)(go-to: &quot;waiting&quot;)]</tw-passagedata>
+<tw-passagedata pid="11" name="waiting" tags="" position="400,400" size="100,100">//Passage 11 • Side Mission//
+
+##The Waiting Room
+
+The interview remains locked. You have one night to prepare—or distract yourself from the terror.
+
+//SIDE MISSION: How will you spend the night?//
+
+(link: &quot;Practice answers until midnight&quot;)[(set: $prepared to true, $career to $career + 3, $wellness to $wellness - 1)(go-to: &quot;interview&quot;)]
+(link: &quot;Help a nervous friend prepare&quot;)[(set: $prepared to true, $friend to true, $integrity to $integrity + 2, $wellness to $wellness + 2)(go-to: &quot;interview&quot;)]
+(link: &quot;Attend a party and ignore everything&quot;)[(set: $prepared to false, $career to $career - 2, $wellness to $wellness + 3)(go-to: &quot;interview&quot;)]
+(link: &quot;Investigate the mysterious recruiter&quot;)[(set: $prepared to true, $career to $career + 1, $integrity to $integrity + 1)(go-to: &quot;interview&quot;)]</tw-passagedata>
+<tw-passagedata pid="12" name="interview" tags="" position="550,400" size="100,100">//Passage 12 • Boss Battle//
+
+##The Interview Battle
+
+The camera turns on. Six interviewers stare silently. One asks:
+
+//&quot;Why should we trust you when everyone here wants the same future?&quot;//
+
+(if: $prepared is true)[You prepared. Your hands still shake, but your mind is ready.
+
+(link: &quot;Tell a truthful story about failure&quot;)[(set: $career to $career + 2, $integrity to $integrity + 3)(go-to: &quot;rejection&quot;)]
+(link: &quot;Give the polished answer they want&quot;)[(set: $career to $career + 4, $integrity to $integrity - 1)(go-to: &quot;rejection&quot;)]
+](else:)[You did not prepare. Your brain offers one useful thought: run.
+
+(link: &quot;Admit you are nervous and answer honestly&quot;)[(set: $integrity to $integrity + 2, $career to $career - 1)(go-to: &quot;rejection&quot;)]
+(link: &quot;Invent a heroic leadership story&quot;)[(set: $career to $career + 2, $integrity to $integrity - 4)(go-to: &quot;rejection&quot;)]
+]</tw-passagedata>
+<tw-passagedata pid="13" name="rejection" tags="" position="100,550" size="100,100">//Passage 13 • The Fall//
+
+##&quot;Unfortunately…&quot;
+
+SUBJECT: Your Application — Thank you for your interest. Unfortunately, we have decided—
+
+The screen goes black before you finish. Then your phone rings from a blocked number.
+
+[[Answer the blocked call-&gt;offer]]
+(link: &quot;Throw the phone onto the bed, then answer it anyway&quot;)[(set: $wellness to $wellness + 1)(go-to: &quot;offer&quot;)]</tw-passagedata>
+<tw-passagedata pid="14" name="offer" tags="" position="250,550" size="100,100">//Passage 14 • The Devil&#39;s Shortcut//
+
+##The Unexpected Offer
+
+A powerful alumnus speaks quietly:
+
+//&quot;I can reverse the rejection. No more interviews. No questions. But someday, I will ask you for one favor.&quot;//
+
+Thunder strikes outside. Your weather app says clear skies.
+
+(link: &quot;Accept the secret arrangement&quot;)[(set: $favor to true, $offer to &quot;shortcut&quot;, $career to $career + 5, $integrity to $integrity - 4)(go-to: &quot;check&quot;)]
+(link: &quot;Ask what the favor will be&quot;)[(set: $favor to true, $offer to &quot;questioned&quot;, $integrity to $integrity + 1)(go-to: &quot;check&quot;)]
+(link: &quot;Reject the offer completely&quot;)[(set: $favor to false, $offer to &quot;rejected&quot;, $integrity to $integrity + 4, $career to $career - 1)(go-to: &quot;check&quot;)]</tw-passagedata>
+<tw-passagedata pid="15" name="check" tags="" position="400,550" size="100,100">//Person 3 • Passage 15//
+
+##Background Check
+
+(if: $resume is &quot;honest&quot;)[VERIFIED.
+
+Every résumé line survives inspection. The investigator closes the file—but notices the alumnus&#39;s number in your call log.
+
+(link: &quot;Continue with your record intact&quot;)[(set: $career to $career + 2, $integrity to $integrity + 2)(go-to: &quot;twoOffers&quot;)]
+](else-if: $resume is &quot;exaggerated&quot;)[DISCREPANCY FOUND.
+
+Your title and duties do not match the employer&#39;s records. A compliance officer gives you sixty seconds to explain.
+
+(link: &quot;Admit you exaggerated&quot;)[(set: $career to $career - 2, $integrity to $integrity + 2)(go-to: &quot;twoOffers&quot;)]
+(link: &quot;Defend the claim and blame HR&quot;)[(set: $career to $career - 1, $integrity to $integrity - 4)(go-to: &quot;twoOffers&quot;)]
+](else:)[FRAUD ALERT.
+
+The invented internship does not exist. Security freezes your application. The lie from Mission One has returned.
+
+(link: &quot;Confess before they finish&quot;)[(set: $career to $career - 5, $integrity to $integrity + 1, $offer to &quot;lost&quot;)(go-to: &quot;twoOffers&quot;)]
+(link: &quot;Create another lie to cover it&quot;)[(set: $career to $career - 7, $integrity to $integrity - 6, $offer to &quot;lost&quot;)(go-to: &quot;twoOffers&quot;)]
+]</tw-passagedata>
+<tw-passagedata pid="16" name="twoOffers" tags="" position="550,550" size="100,100">//Passage 16 • Final Countdown//
+
+##Two Offers. One Hour.
+
+(if: $offer is &quot;lost&quot;)[Your original offer is gone—but two unexpected doors remain open.](else:)[Against every reasonable prediction, two contracts arrive.]
+
+OFFER A: 125,000 dollars, prestige, brutal hours, questionable mission.
+
+OFFER B: 62,000 dollars, meaningful work, uncertain future.
+
+59:59
+
+(link: &quot;Choose prestige and financial security&quot;)[(set: $offer to &quot;prestige&quot;, $career to $career + 5, $wellness to $wellness - 4)(go-to: &quot;emergency&quot;)]
+(link: &quot;Choose meaningful work&quot;)[(set: $offer to &quot;purpose&quot;, $career to $career + 1, $integrity to $integrity + 3, $wellness to $wellness + 3)(go-to: &quot;emergency&quot;)]
+(link: &quot;Reject both and build something new&quot;)[(set: $offer to &quot;founder&quot;, $career to $career + 2, $wellness to $wellness - 1)(go-to: &quot;emergency&quot;)]</tw-passagedata>
+<tw-passagedata pid="17" name="emergency" tags="" position="100,700" size="100,100">//Passage 17 • The Emergency//
+
+##The Call From Home
+
+Minutes before signing, your family calls. Someone you love needs immediate support. Your career choice now affects more than you.
+
+The contract expires at midnight. The last flight leaves in ninety minutes.
+
+(link: &quot;Go home immediately&quot;)[(set: $integrity to $integrity + 3, $wellness to $wellness + 3, $career to $career - 2)(go-to: &quot;betrayal&quot;)]
+(link: &quot;Sign first, then find another way to help&quot;)[(set: $career to $career + 3, $wellness to $wellness - 2)(go-to: &quot;betrayal&quot;)]
+(link: &quot;Call your network and build a compromise&quot;)[(set: $career to $career + 1, $integrity to $integrity + 2, $wellness to $wellness + 1)(go-to: &quot;betrayal&quot;)]</tw-passagedata>
+<tw-passagedata pid="18" name="betrayal" tags="" position="250,700" size="100,100">//Passage 18 • The Betrayal Test//
+
+##Your Friend&#39;s Secret
+
+Your friend—the one (if: $friend is true)[you helped earlier](else:)[who competed against you]—is the other finalist. A leaked file could destroy their future and guarantee yours.
+
+//FINAL ETHICAL TEST: Nobody will know what you choose.//
+
+(link: &quot;Use the file against your friend&quot;)[(set: $career to $career + 5, $integrity to $integrity - 7, $wellness to $wellness - 3)(go-to: &quot;graduation&quot;)]
+(link: &quot;Delete the file and warn your friend&quot;)[(set: $integrity to $integrity + 5, $wellness to $wellness + 2)(go-to: &quot;graduation&quot;)]
+(link: &quot;Report the leak without opening it&quot;)[(set: $integrity to $integrity + 4, $career to $career + 1)(go-to: &quot;graduation&quot;)]</tw-passagedata>
+<tw-passagedata pid="19" name="graduation" tags="" position="400,700" size="100,100">//Passage 19 • Graduation Day//
+
+##The Last Walk
+
+The stadium roars. Your name is called. For one strange second, time stops.
+
+Career: $career • Integrity: $integrity • Wellness: $wellness
+
+(if: $integrity &lt;= -8)[##THE FALLEN COMMODORE
+
+You secured attention, but your decisions became public. The offer disappears. Your final mission is rebuilding trust.](else-if: $career &gt;= 16 and $wellness &lt;= 0)[##THE GOLDEN HANDCUFFS
+
+You reach the top quickly. The salary is enormous. So is the emptiness in your calendar where your life used to be.](else-if: $integrity &gt;= 15 and $wellness &gt;= 8 and $career &gt;= 8)[##SECRET ENDING: VANDERBILT LEGEND
+
+You balance ambition, honesty, and humanity. You do not find a perfect future—you build a responsible one.](else-if: $offer is &quot;founder&quot;)[##THE UNEXPECTED FOUNDER
+
+You reject the script and build your own organization. It is terrifying, unstable, and completely yours.](else-if: $offer is &quot;purpose&quot;)[##THE PURPOSEFUL COMMODORE
+
+Your beginning is modest, but your work matches your values. Success grows more slowly—and more honestly.](else-if: $career &gt;= 13)[##THE RISING STAR
+
+Your ambition carries you into a powerful career. Whether it becomes freedom or another maze depends on what you do next.](else:)[##THE CROSSROADS ENDING
+
+You graduate without every answer. For the first time, uncertainty feels less like failure and more like possibility.]
+
+You earned a Vanderbilt degree. But did you choose your own life?
+
+[[Read the creators&#39; reflection-&gt;reflection]]
+[[Play again and challenge your fate-&gt;start]]</tw-passagedata>
+<tw-passagedata pid="20" name="reflection" tags="" position="550,700" size="100,100">//Passage 20 • Reflection &amp; Bibliography//
+
+##Behind the Crossroads
+
+###Group Reflection
+
+We designed this story as a mission-based journey because career decisions rarely happen in a straight line. The three career doors create nonlinear pathways, while shared scenes reconnect the narrative and show that students in different fields still face pressure, rejection, uncertainty, and ethical choices.
+
+Early decisions return later: résumé honesty affects the background check, preparation affects the interview, and relationships affect the final test. Career, Integrity, and Wellness scores demonstrate that &quot;success&quot; has several meanings. Humor makes the story inviting, while countdowns, mysterious messages, and delayed results create pressure and engagement.
+
+###Team Contributions
+
+Person 1 — Zhaoyu Wang: Passages 1–6, opening mystery, identity pressure, résumé dilemma, career selection.
+Person 2 — Carlyn Sharp: Passages 7–14, career missions, waiting game, interview, rejection, secret offer.
+Person 3 — Mohammad Ibrahim: Passages 15–20, consequences, final crisis, endings, technical testing, reflection.
+
+###Starter Bibliography
+
+Vanderbilt University Career Center. Career exploration and preparation resources. Twine Reference and Documentation. Group-created narrative, dialogue, scoring system, and original ethical dilemmas.
+
+[[Return to graduation-&gt;graduation]]
+[[Restart the entire story-&gt;start]]</tw-passagedata>
+</tw-storydata>
+</body>
+</html>
