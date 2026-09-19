@@ -64,6 +64,16 @@
     .back-btn:hover:not(:disabled){background:var(--vu-black);color:#fff}.back-btn:hover:not(:disabled):before{color:var(--vu-gold)}
     .back-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--vu-gold-soft),0 0 0 4px var(--vu-gold)}
     .back-btn:disabled{opacity:.45;cursor:not-allowed;border-color:var(--border)}
+    .sound-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;font-size:.9rem;color:var(--ink);background:#fff;border:1px solid var(--vu-gold);border-radius:999px;padding:9px 16px;cursor:pointer;transition:background-color .18s,color .18s,box-shadow .18s}
+    .sound-btn svg{width:16px;height:16px;flex:0 0 auto}
+    .sound-btn:hover{background:var(--vu-black);color:#fff}
+    .sound-btn.on{background:var(--vu-gold);color:#1c1a17;border-color:var(--vu-gold)}
+    .sound-btn.on .eq{display:inline-flex}
+    .sound-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--vu-gold-soft),0 0 0 4px var(--vu-gold)}
+    .eq{display:none;align-items:flex-end;gap:2px;height:13px;margin-left:1px}
+    .eq i{width:3px;background:currentColor;border-radius:2px;animation:eqbar 1s ease-in-out infinite}
+    .eq i:nth-child(1){height:5px;animation-delay:-.2s}.eq i:nth-child(2){height:11px;animation-delay:-.5s}.eq i:nth-child(3){height:7px;animation-delay:-.05s}
+    @keyframes eqbar{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
     .fb-toggle{margin:0}
     .fb-toggle>summary{list-style:none;cursor:pointer;font-family:var(--sans);font-weight:700;font-size:.88rem;color:var(--vu-gold-2);display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border:1px dashed var(--vu-gold);border-radius:999px;background:#fbf6ea}
     .fb-toggle>summary::-webkit-details-marker{display:none}.fb-toggle>summary::marker{content:""}
@@ -166,6 +176,7 @@
     .main-game .bar{height:5px;margin-top:6px}
     .main-game .gamebar{margin:0;flex:0 0 auto}
     .back-btn{padding:7px 14px;font-size:clamp(.75rem,.9vw,.9rem)}
+    .sound-btn{padding:7px 14px;font-size:clamp(.75rem,.9vw,.9rem)}
     .featured{flex:0 0 auto;height:clamp(58px,10vh,110px);border:1px solid var(--border);border-top:3px solid var(--vu-gold);border-radius:6px;overflow:hidden;background:#0a0a0a}
     .featured-img{width:100%;height:100%;object-fit:cover;object-position:50% 26%;display:block}
     .main-game #stage{flex:1 1 auto;min-height:0;overflow:auto}
@@ -246,7 +257,7 @@
 <div class="app-grid">
 <section class="col main-game" id="secGame" aria-label="Game">
 <div class="hud-wrap"><div class="hud" id="hud"></div></div>
-<div class="gamebar"><button class="back-btn" id="backBtn" type="button" disabled>Back to Previous Choice</button></div>
+<div class="gamebar"><button class="back-btn" id="backBtn" type="button" disabled>Back to Previous Choice</button><button class="sound-btn" id="soundBtn" type="button" aria-pressed="false" title="Join the Immersion Sounds Experience — looping background audio while you play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"></path><rect x="2.5" y="14" width="4" height="6" rx="1.5"></rect><rect x="17.5" y="14" width="4" height="6" rx="1.5"></rect></svg><span class="sfx-label">Join Immersion Sounds</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button></div>
 <main id="stage"></main>
 </section>
 <section class="col side" id="secLR" aria-label="Hall of Shame, Game Rankings, and Resources">
@@ -881,7 +892,24 @@ function openBackModal(){if(!past.length)return;
   try{await api('feedback',{method:'POST',body:{body:m.clean,display_name:disp,status:'pending'}});markThrottle('bk_last');lsSet('bk_hash',h);renderShamePanel();close();back()}
   catch(e){msg.className='form-msg err';msg.textContent='Submission failed. Please try again later.';sub.disabled=false}});
  setTimeout(function(){text.focus()},30);}
-function initFeatures(){initTabs();renderShamePanel();renderRankingsPanel();renderResourcesPanel();renderGallery();initSectionTabs();var bb=document.getElementById('backBtn');if(bb)bb.addEventListener('click',openBackModal);updateBackBtn();initModeration()}
+/* --- optional "Immersion Sounds" background audio (opt-in; user gesture required for sound) --- */
+var IMMERSION_VIDEO='BQrxsyGTztM';
+function initSound(){var btn=document.getElementById('soundBtn');if(!btn)return;
+ var host=document.createElement('div');host.id='bgAudioHost';host.setAttribute('aria-hidden','true');
+ host.style.cssText='position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none';
+ document.body.appendChild(host);
+ var label=btn.querySelector('.sfx-label');var on=false;
+ btn.addEventListener('click',function(){on=!on;
+  if(on){
+   host.innerHTML='<iframe id="bgAudioFrame" width="200" height="120" src="https://www.youtube.com/embed/'+IMMERSION_VIDEO+'?autoplay=1&loop=1&playlist='+IMMERSION_VIDEO+'&controls=0&modestbranding=1&playsinline=1&rel=0" title="Immersion Sounds Experience" allow="autoplay" frameborder="0"></iframe>';
+   btn.classList.add('on');btn.setAttribute('aria-pressed','true');if(label)label.textContent='Immersion Sounds: On';
+  }else{
+   host.innerHTML='';
+   btn.classList.remove('on');btn.setAttribute('aria-pressed','false');if(label)label.textContent='Join Immersion Sounds';
+  }
+ });
+}
+function initFeatures(){initTabs();renderShamePanel();renderRankingsPanel();renderResourcesPanel();renderGallery();initSectionTabs();var bb=document.getElementById('backBtn');if(bb)bb.addEventListener('click',openBackModal);updateBackBtn();initSound();initModeration()}
 window.addEventListener('hashchange',initModeration);
 initFeatures();
 </script></body></html>
