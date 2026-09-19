@@ -48,6 +48,7 @@
     .tag{display:inline-block;padding:6px 14px;border-radius:999px;background:#fff;border:1px solid var(--vu-gold);color:var(--vu-gold-2);font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0 6px 7px 0}
     .danger{color:#7a2417;font-weight:700}.good{color:var(--vu-gold-2);font-weight:700}
     .clock{font-family:var(--serif);font-size:clamp(2.6rem,8vw,5rem);line-height:1;color:var(--ink);text-align:center;margin:22px;font-weight:400;letter-spacing:.02em}
+    .clock.clock-done{color:#7a2417}
     .email{background:#fbf6ea;color:var(--body);padding:20px 24px;border:1px solid var(--border);border-left:5px solid var(--vu-gold);border-radius:3px;box-shadow:var(--shadow-sm)}.email b{font-family:var(--serif);color:var(--ink);font-weight:700;letter-spacing:.03em}.email p{font-size:.96rem;color:var(--body);margin:.5em 0}
     .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0}.score-box{text-align:center;padding:24px 12px;background:#fff;border:1px solid var(--border);border-top:3px solid var(--vu-gold);border-radius:4px;box-shadow:var(--shadow-sm);font-family:var(--sans);font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}.score-box b{display:block;font-family:var(--serif);font-size:2.4rem;color:var(--ink);font-weight:400;margin-bottom:5px;letter-spacing:.01em}
     .vu-footer{margin:30px 0 0;padding:20px 6px 0;border-top:1px solid var(--border);color:var(--muted);font-family:var(--sans);font-size:.82rem;line-height:1.5;text-align:center}
@@ -551,7 +552,7 @@ Vanderbilt University Career Center. Career exploration and preparation resource
 <script>
 const initial={career:0,integrity:0,wellness:0,days:30,path:'Undecided',resume:'none',prepared:false,friend:false,favor:false,offer:'none',history:[]};
 let s={...initial};
-let past=[],currentId='start',startTime=Date.now(),elapsedFinal=null;
+let past=[],currentId='start',startTime=Date.now(),elapsedFinal=null,clockTimer=null;
 const scenes={
 start:{part:'',title:'Commodore Crossroads',body:`<span class="countdown-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>30 days until graduation</span><h1>Choose Your Life<br>After Vanderbilt</h1><p>It is 11:57 p.m. The campus is quiet—too quiet. Your laptop flashes, your phone vibrates, and somewhere outside, a squirrel knocks over a trash can with the confidence of a tenured professor.</p><div class="message warning">UNKNOWN: “Thirty days. Three doors. One future. Every choice will follow you.”</div><p>Your mission is to graduate with a future, a conscience, and—if possible—your sanity.</p>`,choices:[['Begin the countdown','family']]},
 family:{part:'Passage 2 • The Pressure Call',title:'Your Family Is Calling',body:`<p>Your family asks the question every senior fears:</p><div class="message">“So…do you have a job yet?”</div><p>You stare at your unopened rejection emails. One subject line reads, “Exciting Update!” It was not exciting.</p>`,choices:[['Tell the truth: “I am still figuring it out.”','invitation',{integrity:2,wellness:1}],['Say, “Everything is under control.”','invitation',{career:1,integrity:-1}],['Promise you will become a lawyer or doctor','invitation',{wellness:-2,career:1}]]},
@@ -739,7 +740,22 @@ function openResourceModal(id,title){var ov=document.createElement('div');ov.cla
  document.addEventListener('keydown',function k(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',k)}})}
 
 /* --- leaderboard opt-in at graduation --- */
-function afterRender(id){if(id==='graduation'){var card=document.querySelector('#stage .card');if(card)renderLeaderboardOptin(card)}}
+function fmtClock(t){var m=Math.floor(t/60),sec=t%60;return (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec}
+function startClock(){
+ if(clockTimer){clearInterval(clockTimer);clockTimer=null}
+ var el=document.querySelector('#stage .clock');if(!el)return;
+ var parts=(el.textContent||'').trim().split(':').map(function(n){return parseInt(n,10)||0});
+ var total=parts.length===2?parts[0]*60+parts[1]:parts[0];
+ if(!(total>0))return;
+ el.setAttribute('aria-live','polite');el.classList.remove('pulse','clock-done');
+ el.textContent=fmtClock(total);
+ clockTimer=setInterval(function(){
+  total--;
+  if(total<=0){el.textContent=fmtClock(0);el.classList.add('pulse','clock-done');clearInterval(clockTimer);clockTimer=null;return}
+  el.textContent=fmtClock(total)
+ },1000);
+}
+function afterRender(id){startClock();if(id==='graduation'){var card=document.querySelector('#stage .card');if(card)renderLeaderboardOptin(card)}}
 function renderLeaderboardOptin(card){if(card.querySelector('.lb-optin'))return;
  var score=scoreValue();if(elapsedFinal==null)elapsedFinal=Date.now()-startTime;var secs=Math.max(0,Math.round(elapsedFinal/1000));
  var div=document.createElement('div');div.className='lb-optin';
