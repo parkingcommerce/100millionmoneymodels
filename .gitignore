@@ -1,11 +1,4 @@
 .DS_Store
 Thumbs.db
 *.log
-tools/
-.build-output.html
-.build-check.html
-story/StoryStylesheet.twee
-story/StoryJavaScript.twee
-source/embedded-images.js
-.import-decompiled.twee
 
