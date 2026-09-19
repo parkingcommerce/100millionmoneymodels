@@ -78,19 +78,23 @@ When the backend is not configured, **Hall of Shame** and **Game Rankings** show
 
 Original PNGs remain in `assets/images/` as editable source files.
 
-## Manual verification checklist
+## Verification status
 
-**Status: pending** — Twine desktop is not available in CI. Complete locally:
+**Automated (verified in this repo):**
 
-- [ ] Extract repo ZIP; confirm `Commodore-Crossroads.html` is present
-- [ ] Import `Commodore-Crossroads.html` into Twine 2
-- [ ] Story format shows **SugarCube 2.37.3**; passage map shows **20 passages**
-- [ ] Open **Story Stylesheet** and **Story JavaScript** — Vanderbilt CSS/JS present
-- [ ] **Test Play** — confirm HUD icons and gallery images load (embedded)
-- [ ] **Publish to File** to Desktop; open published HTML — HUD/gallery still work
-- [ ] Edit one passage line → Publish → `import-from-html.py` → rebuild → confirm edit in `story/Passages.twee`
-- [ ] Play Route 1 from `PLAYTHROUGHS.md`; confirm `check` changes with résumé choice
-- [ ] Reach `reflection`; confirm **Exploring Identity** theme and bibliography
+- [x] Simulated GitHub **Download ZIP → extract** — `Commodore-Crossroads.html` is present and valid HTML (not a ZIP)
+- [x] Import file contains **SugarCube 2.37.3** metadata and **20 named passages**
+- [x] `index.html` and `Commodore-Crossroads.html` are **byte-identical** (same game for Pages and Twine)
+- [x] `python3 scripts/build-story.py --check` — source and built HTML stay in sync
+- [x] `python3 scripts/verify-import-roundtrip.py` — Publish → import → rebuild preserves passage, CSS, and JS edits
+- [x] GitHub Pages returns **HTTP 200** with SugarCube HTML (`https://parkingcommerce.github.io/100millionmoneymodels/`)
+
+**Requires Twine 2 desktop (not available in CI — confirm locally once):**
+
+- [ ] Twine → **Library → Import** → select **`Commodore-Crossroads.html`** (not the repo ZIP)
+- [ ] Passage map shows **20 passages**; format shows **SugarCube 2.37.3**
+- [ ] **Test Play** — HUD icons and gallery images load (embedded PNGs)
+- [ ] **Publish to File** → open published HTML offline — HUD/gallery still work
 
 ## Why SugarCube, not Harlowe
 

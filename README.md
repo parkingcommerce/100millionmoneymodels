@@ -6,16 +6,21 @@ An original **Twine 2 / SugarCube 2.37.3** interactive story (20 passages) about
 
 ## Play the game
 
-- **Online:** GitHub Pages (after deploy)
-- **Offline:** open `index.html` in a browser with the `assets/` folder beside it
+- **Online:** [Play on GitHub Pages](https://parkingcommerce.github.io/100millionmoneymodels/)
+- **Offline:** open `index.html` in any browser (HUD/gallery PNGs are embedded; favicon still uses `assets/favicon.svg`)
 
 ## Import into Twine 2
 
-**Do not import the GitHub repository ZIP into Twine.** Extract it first.
+Twine 2 imports **HTML story files** and **Twee** (`.twee`). It does **not** import a GitHub repository ZIP. If you import the ZIP directly, Twine reads the ZIP’s binary header (`PK`) as text and creates a garbage passage named **“PK”** — that is expected and means you picked the wrong file.
 
-1. GitHub → **Code → Download ZIP** → **extract**
-2. Twine 2 → **Library → Import**
-3. Select **`Commodore-Crossroads.html`**
+**Correct steps:**
+
+1. On GitHub, click **Code → Download ZIP**
+2. **Extract** the ZIP on your computer (double-click it)
+3. Open **Twine 2** → **Library** tab → **Import**
+4. Choose **`Commodore-Crossroads.html`** from the extracted folder
+
+Alternative: import **`Commodore-Crossroads.twee`** instead of the HTML file.
 
 See **[TWINE_WORKFLOW.md](TWINE_WORKFLOW.md)** for editing in Twine, syncing back to git, asset behavior, and a manual verification checklist.
 
