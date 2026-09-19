@@ -860,37 +860,22 @@ function toggleUpload(w){if(!w)return;
 function initSectionTabs(){var tabs=[].slice.call(document.querySelectorAll('.sec-tab'));if(!tabs.length)return;
  function show(id){document.querySelectorAll('.app-grid .col').forEach(function(c){c.classList.toggle('active',c.id===id)});tabs.forEach(function(t){t.setAttribute('aria-selected',t.dataset.sec===id?'true':'false')})}
  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.sec)})});show('secGame')}
-/* --- Back-button modal: submit a Vanderbilt-improvement idea to unlock the previous choice --- */
+/* --- Back-button modal: type one bad thing about Vanderbilt, then continue. Nothing is stored. --- */
 function openBackModal(){if(!past.length)return;
  var ov=document.createElement('div');ov.className='mod-overlay';ov.id='backModal';
  ov.innerHTML='<div class="mod-card"><button class="mod-close" aria-label="Close">×</button>'+
   '<h3 style="margin:0 0 6px">Before You Go Back…</h3>'+
   '<p class="note" style="margin:0 0 10px">Say one bad thing about Vanderbilt to go back.</p>'+
   '<div class="field"><label for="bkText">One bad thing about Vanderbilt<span class="counter" id="bkCount">0/200</span></label><textarea id="bkText" maxlength="200" rows="3" placeholder="One bad thing about Vanderbilt…"></textarea></div>'+
-  '<div class="field"><label for="bkName">Display name (optional)</label><input type="text" id="bkName" maxlength="24" value="Anonymous Commodore"></div>'+
-  '<label class="consent"><input type="checkbox" id="bkConsent"> I understand that my moderated response may appear publicly in the Hall of Shame.</label>'+
-  '<p class="note"><strong>Privacy:</strong> do not include names, student IDs, contact details, or other personal information, and do not target identifiable people.</p>'+
-  (BACKEND_READY?'':'<div class="form-msg err" style="margin-top:6px">Submissions are disabled until the secure backend is configured (missing BACKEND.url and BACKEND.anonKey — see BACKEND_SETUP.md). You can still go back.</div>')+
-  '<div class="res-actions" style="margin-top:10px"><button class="vu-btn" id="bkSubmit" type="button"'+(BACKEND_READY?'':' disabled')+'>Submit &amp; Go Back</button>'+(BACKEND_READY?'':'<button class="vu-btn ghost" id="bkSkip" type="button">Go Back</button>')+'</div>'+
-  '<div class="form-msg" id="bkMsg" hidden></div></div>';
+  '<div class="res-actions" style="margin-top:10px"><button class="vu-btn" id="bkContinue" type="button" disabled>Continue</button></div></div>';
  document.body.appendChild(ov);
- var text=ov.querySelector('#bkText'),cnt=ov.querySelector('#bkCount'),name=ov.querySelector('#bkName'),consent=ov.querySelector('#bkConsent'),sub=ov.querySelector('#bkSubmit'),msg=ov.querySelector('#bkMsg'),skip=ov.querySelector('#bkSkip');
+ var text=ov.querySelector('#bkText'),cnt=ov.querySelector('#bkCount'),go=ov.querySelector('#bkContinue');
  function close(){ov.remove()}
- ov.addEventListener('click',function(e){if(e.target===ov)close()});
+ function unlock(){close();back()}
  ov.querySelector('.mod-close').onclick=close;
- document.addEventListener('keydown',function k(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',k)}});
- text.addEventListener('input',function(){cnt.textContent=text.value.length+'/200'});
- if(skip)skip.onclick=function(){close();back()};
- sub.addEventListener('click',async function(){msg.hidden=false;msg.className='form-msg';
-  var m=moderateText(text.value,{maxLen:200});if(!m.ok){msg.className='form-msg err';msg.textContent=m.reason;return}
-  if(!consent.checked){msg.className='form-msg err';msg.textContent='Please check the box to acknowledge public moderation.';return}
-  var disp=(name.value||'').trim()||'Anonymous Commodore';var vn=validName(disp);if(!vn.ok){msg.className='form-msg err';msg.textContent=vn.reason;return}
-  if(!BACKEND_READY){return}
-  if(!throttleOk('bk_last',30000)){msg.className='form-msg err';msg.textContent='Please wait a moment before submitting again.';return}
-  var h=hashStr(m.clean+'|'+disp);if(h===lsGet('bk_hash')){msg.className='form-msg err';msg.textContent='This looks like a duplicate of your last submission.';return}
-  sub.disabled=true;
-  try{await api('feedback',{method:'POST',body:{body:m.clean,display_name:disp,status:'pending'}});markThrottle('bk_last');lsSet('bk_hash',h);renderShamePanel();close();back()}
-  catch(e){msg.className='form-msg err';msg.textContent='Submission failed. Please try again later.';sub.disabled=false}});
+ text.addEventListener('input',function(){cnt.textContent=text.value.length+'/200';go.disabled=text.value.trim().length<3});
+ text.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&!go.disabled){e.preventDefault();unlock()}});
+ go.addEventListener('click',unlock);
  setTimeout(function(){text.focus()},30);}
 /* --- optional "Immersion Sounds" background audio (opt-in; user gesture required for sound) --- */
 var IMMERSION_VIDEO='BQrxsyGTztM';
