@@ -707,15 +707,25 @@ function feedbackItem(r){return '<div class="item"><div>'+esc(r.body)+'</div><di
 /* --- Hall of Shame (genuine, moderated Vanderbilt-improvement submissions only) --- */
 function fmtDate(iso){try{return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}catch(e){return ''}}
 function wireReacts(scope){(scope||document).querySelectorAll('.react-btn[data-id]').forEach(function(b){b.onclick=function(){reactItem(b.dataset.id,b)}})}
-async function reactItem(id,btn){if(!BACKEND_READY)return;if(!throttleOk('react_'+id,4000))return;
+async function reactItem(id,btn){
+ if(!BACKEND_READY){var row=SHAME_DEMO.filter(function(r){return r.id===id})[0];if(row)row.reactions=(Number(row.reactions)||0)+1;var rc=btn.querySelector('.rc');if(rc)rc.textContent=String((parseInt(rc.textContent||'0',10)||0)+1);btn.disabled=true;return}
+ if(!throttleOk('react_'+id,4000))return;
  try{await api('rpc/react_feedback',{method:'POST',body:{p_id:id}});markThrottle('react_'+id);var rc=btn.querySelector('.rc');if(rc)rc.textContent=String((parseInt(rc.textContent||'0',10)||0)+1);btn.disabled=true}catch(e){}}
 function shameItem(r){return '<div class="item"><div>'+esc(r.body)+'</div><div class="meta"><span class="who">'+(r.display_name?esc(r.display_name):'Anonymous Commodore')+' · '+esc(fmtDate(r.created_at))+'</span><span class="item-actions"><button class="react-btn" data-id="'+esc(r.id)+'" aria-label="React">▲ <span class="rc">'+(Number(r.reactions)||0)+'</span></button><button class="report-btn" data-table="feedback" data-id="'+esc(r.id)+'">Report</button></span></div></div>'}
 var shameView='recent';
+var SHAME_DEMO=[
+ {id:'s1',display_name:'AnchorAda',body:'The dining halls close the second you finally leave lab.',created_at:'2026-09-16T18:00:00Z',reactions:12},
+ {id:'s2',display_name:'GoldRush22',body:'Career Center appointments vanish faster than internship spots.',created_at:'2026-09-15T16:20:00Z',reactions:9},
+ {id:'s3',display_name:'CommodoreK',body:'The squirrels have tenure. Students do not.',created_at:'2026-09-14T12:10:00Z',reactions:21},
+ {id:'s4',display_name:'DoreDreamer',body:'West End traffic during graduation week is a boss battle.',created_at:'2026-09-13T21:05:00Z',reactions:7},
+ {id:'s5',display_name:'VandyVoyager',body:'Rand wifi drops right when you hit submit.',created_at:'2026-09-12T09:40:00Z',reactions:16}
+];
 async function renderShamePanel(){var el=document.getElementById('panel-shame');if(!el)return;
- var head='<p class="panel-title">Hall of Shame</p><div class="seg"><button data-v="recent" aria-pressed="'+(shameView==='recent')+'">Recent</button><button data-v="reacted" aria-pressed="'+(shameView==='reacted')+'">Most Reacted</button></div>';
+ var head='<p class="panel-title">Hall of Shame'+(BACKEND_READY?'':'<span class="demo-badge">Demo</span>')+'</p><div class="seg"><button data-v="recent" aria-pressed="'+(shameView==='recent')+'">Recent</button><button data-v="reacted" aria-pressed="'+(shameView==='reacted')+'">Most Reacted</button></div>';
  var empty='<div class="item"><em>The Hall of Shame is empty—for now.</em></div>';
  function wire(){el.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){shameView=b.dataset.v;renderShamePanel()}});wireReports(el);wireReacts(el)}
- if(!BACKEND_READY){el.innerHTML=head+empty+'<p class="note">Submissions are disabled until the secure backend is configured (missing <code>BACKEND.url</code> and <code>BACKEND.anonKey</code> — see BACKEND_SETUP.md). Approved responses appear here only after moderation.</p>';wire();return}
+ if(!BACKEND_READY){var rows=SHAME_DEMO.slice();if(shameView==='reacted')rows.sort(function(a,b){return (b.reactions||0)-(a.reactions||0)});else rows.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at)});
+  el.innerHTML=head+rows.map(shameItem).join('')+'<p class="note"><em>Sample posts (demo).</em> Recent shows newest first. Most Reacted sorts by ▲ count.</p>';wire();return}
  el.innerHTML=head+'<div class="note">Loading…</div>';
  try{var order=shameView==='reacted'?'reactions.desc,created_at.desc':'created_at.desc';var rows=await api('feedback?status=eq.approved&order='+order+'&limit=50');
   el.innerHTML=head+(rows.length?rows.map(shameItem).join(''):empty)+'<p class="note">Moderated player ideas for improving Vanderbilt. Only approved responses are shown.</p>';wire()}
@@ -723,12 +733,20 @@ async function renderShamePanel(){var el=document.getElementById('panel-shame');
 
 /* --- Game Rankings (game scores only; kept separate from criticism) --- */
 var lbView='top';
+var LB_DEMO=[
+ {id:'l1',display_name:'AnchorAda',score:34,path:'Medicine & Research',doing_now:'NIH research fellow'},
+ {id:'l2',display_name:'GoldRush22',score:31,path:'Finance & Consulting',doing_now:'Analyst in Nashville'},
+ {id:'l3',display_name:'CommodoreK',score:28,path:'Law',doing_now:'Public-interest law clerk'},
+ {id:'l4',display_name:'DoreDreamer',score:24,path:'Medicine & Research',doing_now:'Gap-year EMT'},
+ {id:'l5',display_name:'VandyVoyager',score:19,path:'Finance & Consulting',doing_now:'Founder, campus startup'}
+];
 async function renderRankingsPanel(){var el=document.getElementById('panel-rankings');if(!el)return;
- var head='<p class="panel-title">Game Rankings</p><div class="seg"><button data-v="top" aria-pressed="'+(lbView==='top')+'">Top</button><button data-v="recent" aria-pressed="'+(lbView==='recent')+'">Recent</button></div>';
+ var head='<p class="panel-title">Game Rankings'+(BACKEND_READY?'':'<span class="demo-badge">Demo</span>')+'</p><div class="seg"><button data-v="top" aria-pressed="'+(lbView==='top')+'">Top</button><button data-v="recent" aria-pressed="'+(lbView==='recent')+'">Recent</button></div>';
  var foot='<p class="note">Game scores only — rank · name · score · career path · what they’re doing now. Ranked by score; time is a tie-breaker.</p>';
  var empty='<div class="item"><em>No game rankings yet. Finish the game to add yours.</em></div>';
  function wire(){el.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){lbView=b.dataset.v;renderRankingsPanel()}});var d=document.getElementById('delReq');if(d)d.onclick=requestDeletionFlow;wireReports(el)}
- if(!BACKEND_READY){el.innerHTML=head+empty+'<p class="note">Submissions are disabled until the secure backend is configured (see BACKEND_SETUP.md).</p>'+foot;wire();return}
+ if(!BACKEND_READY){var rows=LB_DEMO.slice();if(lbView==='recent')rows.reverse();
+  el.innerHTML=head+rows.map(function(r,i){return lbRow(r,lbView==='top'?i+1:null)}).join('')+'<p class="note"><em>Sample data (demo).</em> Top ranks by score. Recent shows newest first.</p>'+foot;wire();return}
  el.innerHTML=head+'<div class="note">Loading…</div>';
  try{var order=lbView==='top'?'score.desc,elapsed_ms.asc':'created_at.desc';var rows2=await api('leaderboard_public?status=eq.approved&order='+order+'&limit=25');
   el.innerHTML=head+(rows2.length?rows2.map(function(r,i){return lbRow(r,lbView==='top'?i+1:null)}).join(''):empty)+foot+'<button class="report-btn" id="delReq">Request deletion of my entry</button>';wire()}
