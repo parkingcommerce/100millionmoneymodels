@@ -1,44 +1,59 @@
 # Commodore Crossroads: Choose Your Life After Vanderbilt
 
-This folder contains a complete playable prototype for the Interactive Digital Narrative Project. Its presentation uses only black, gold, and white, with one consistent minimal sans-serif typeface throughout.
+A **Twine 2 / SugarCube 2.37.3** story that uses the same Vanderbilt black/gold/cream interface as the live website. One source builds both the GitHub Pages game and the Twine import file.
 
-## Run the game
+## Play
 
-Open `index.html` in a browser. No installation or internet connection is required.
+- **Live website (unchanged until this preview is approved):** [https://parkingcommerce.github.io/100millionmoneymodels/](https://parkingcommerce.github.io/100millionmoneymodels/)
+- **This preview branch:** open `index.html` in a browser after building, or use the preview URL posted with the branch.
 
-## Publish with GitHub Pages
+## Import into Twine 2 (do not import the GitHub ZIP)
 
-1. Create a new empty GitHub repository.
-2. Upload everything inside this folder to the repository root.
-3. Make sure the default branch is named `main`.
-4. Open **Settings → Pages** in GitHub.
-5. Under **Build and deployment**, select **GitHub Actions**.
-6. Push a change or run the “Deploy GitHub Pages” workflow manually.
-7. GitHub will provide the public project link after deployment finishes.
+Twine imports **HTML story files**, not GitHub’s Download ZIP. If you import the ZIP, Twine reads the archive header (`PK`) and creates a corrupted passage named **PK**. That is expected. Extract first.
 
-Do not upload only `index.html`; keep `.github`, `assets`, `.nojekyll`, and the credit files too.
+**Correct workflow:**
 
-## Group division
+1. On GitHub, click **Code → Download ZIP**
+2. **Extract** the ZIP on your computer (double-click it; do not import the `.zip`)
+3. Open **Twine 2 → Library → Import**
+4. Choose **`Commodore-Crossroads.html`** from the extracted folder
 
-- Person 1: Passages 1–6 — opening mystery, family pressure, résumé ethics, Career Vault.
-- Person 2: Passages 7–14 — three career branches, waiting-room mission, interview, rejection, secret offer.
-- Person 3: Passages 15–20 — background-check consequences, final decisions, endings, reflection and testing.
+That file is the one to import. It contains 20 editable passages, the custom stylesheet, and the custom JavaScript.
 
-## Move it into Twine
+See **[TWINE_WORKFLOW.md](TWINE_WORKFLOW.md)** for Play/Test, Publish to File, and how to bring Twine edits back into this repository.
 
-The prototype already behaves like a Twine story. To recreate it in Twine:
+## One authoritative source
 
-1. Create a new story using the **SugarCube 2** format.
-2. Create passages using the titles shown inside the game.
-3. Copy each scene's narrative text and choices from `index.html` or the planning sheet.
-4. Use story variables for `$career`, `$integrity`, `$wellness`, `$path`, `$resume`, and `$prepared`.
-5. Export the finished Twine story as HTML, test every branch, and publish that HTML through itch.io or GitHub Pages.
+| Edit this | Purpose |
+| --- | --- |
+| `story/Passages.twee` | Passage text, choices, scoring |
+| `story/Head.twee` | Title, IFID, StoryInit variables |
+| `story/StoryInterface.twee` | Header, dashboard, side panels, footer chrome |
+| `source/stylesheet.css` | Vanderbilt UI |
+| `source/script.js` | HUD, Hall of Shame, gallery, resources, sounds |
+| `assets/images/` | Source PNGs (embedded into HTML at build time) |
 
-## Before submission
+```bash
+python3 scripts/build-story.py
+```
 
-- Replace “Person 1/2/3” with the members' names.
-- Expand the bibliography with every image, sound, video, or factual source used.
-- Ask each member to play at least two routes.
-- Confirm that every link works and that the final reflection is included.
-- Let only the designated group leader submit the final working link.
-- Add every image and audio source to `MEDIA_CREDITS.md`.
+This writes identical `index.html` and `Commodore-Crossroads.html`.
+
+## What needs internet
+
+| Feature | Offline? | Notes |
+| --- | --- | --- |
+| Story, choices, scores, timers, endings | Yes | Core game |
+| HUD, gallery, header images | Yes | Embedded as data URIs |
+| Google Fonts | No | Falls back to system serif/sans |
+| Resources (YouTube talks) | No | Thumbnails and embeds |
+| Immersion Sounds | No | Opt-in YouTube audio |
+| Live Hall of Shame / Rankings submissions | No | Needs internet + Supabase (`BACKEND_SETUP.md`) |
+
+Without a backend, Hall of Shame and Game Rankings show the same on-page sample posts as the current website. Uploads stay in the browser and are not stored.
+
+## Team
+
+- **Zhaoyu Wang:** Passages 1–6
+- **Carlyn Sharp:** Passages 7–14
+- **Mohammad Ibrahim:** Passages 15–20, build & testing
