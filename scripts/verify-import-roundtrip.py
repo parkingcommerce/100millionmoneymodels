@@ -35,8 +35,8 @@ def main() -> None:
         passages = originals["passages"]
         if MARKER not in passages:
             passages = passages.replace(
-                "<<button \"Begin the countdown\" \"family\">><</button>>",
-                f"<<button \"Begin the countdown\" \"family\">><</button>>\n<p>{MARKER}</p>",
+                "<<button [[Begin the countdown|family]]>><</button>>",
+                f"<<button [[Begin the countdown|family]]>><</button>>\n<p>{MARKER}</p>",
                 1,
             )
             PASSAGES.write_text(passages, encoding="utf-8")

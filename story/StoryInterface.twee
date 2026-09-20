@@ -1,4 +1,4 @@
-:: StoryInterface
+:: StoryInterface {"position":"280,50","size":"100,100"}
 <div id="app">
 <header class="vu-header"><div class="vu-brandbar"><img class="vu-logo" id="vuLogo" alt="Vanderbilt star logo"><span class="vu-wordmark">Vanderbilt University</span></div><div class="vu-gametitle">Commodore Crossroads</div></header>
 <nav class="sec-tabs" aria-label="Sections">

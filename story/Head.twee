@@ -10,7 +10,7 @@ Commodore Crossroads
   "zoom": 1
 }
 
-:: StoryInit
+:: StoryInit {"position":"80,50","size":"100,100"}
 <<set $career to 0>>
 <<set $integrity to 0>>
 <<set $wellness to 0>>

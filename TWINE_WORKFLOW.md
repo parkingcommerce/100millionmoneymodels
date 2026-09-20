@@ -11,7 +11,7 @@ Commodore Crossroads is a native **SugarCube 2.37.3** story. The website (`index
 
 Importing the ZIP itself produces a passage named **PK** because Twine reads the ZIP binary header. That is the wrong file.
 
-After import, Twine shows a passage map. Click **Play** or **Test** to see the Vanderbilt website interface, not SugarCube’s default look.
+After import, Twine shows a passage map with arrows from the actual choices (`[[label|passage]]` inside `<<button>>`). Utility passages (StoryInit, StoryInterface) sit above the narrative. Click **Play** or **Test** to see the Vanderbilt website interface, not SugarCube’s default look.
 
 ## Play, Test, and Publish to File
 

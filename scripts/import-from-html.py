@@ -73,11 +73,11 @@ def split_passages(decompiled: str) -> tuple[dict[str, str], dict[str, str]]:
 
 def write_passages_twee(blocks: dict[str, str], meta: dict[str, str]) -> None:
     positions = {
-        "start": "100,100", "family": "250,100", "invitation": "400,100", "resume": "550,100",
-        "vault": "100,250", "choose": "250,250", "careerLaw": "400,250", "careerFinance": "550,250",
-        "careerResearch": "100,400", "submitted": "250,400", "waiting": "400,400", "interview": "550,400",
-        "rejection": "100,550", "offer": "250,550", "check": "400,550", "twoOffers": "550,550",
-        "emergency": "100,700", "betrayal": "250,700", "graduation": "400,700", "reflection": "550,700",
+        "start": "80,280", "family": "300,280", "invitation": "520,280", "resume": "740,280",
+        "vault": "960,280", "choose": "1180,280", "careerLaw": "740,500", "careerFinance": "960,500",
+        "careerResearch": "1180,500", "submitted": "80,720", "waiting": "300,720", "interview": "520,720",
+        "rejection": "740,720", "offer": "960,720", "check": "80,940", "twoOffers": "300,940",
+        "emergency": "520,940", "betrayal": "740,940", "graduation": "80,1160", "reflection": "300,1160",
     }
     order = [
         "start", "family", "invitation", "resume", "vault", "choose", "careerLaw", "careerFinance",
@@ -93,6 +93,15 @@ def write_passages_twee(blocks: dict[str, str], meta: dict[str, str]) -> None:
             pos_json = "{" + pos + "}"
         parts.append(f":: {name} {pos_json}\n{blocks[name]}\n")
     (STORY / "Passages.twee").write_text("\n".join(parts).rstrip() + "\n", encoding="utf-8")
+
+
+def extract_special_header(decompiled: str, label: str) -> str | None:
+    pattern = rf"^:: {re.escape(label)}(?:\s+\[.*?\])?(?:\s+(\{{[^}}]*\}}))?\s*$"
+    for line in decompiled.splitlines():
+        match = re.match(pattern, line)
+        if match:
+            return match.group(1)
+    return None
 
 
 def extract_special(decompiled: str, label: str) -> str | None:
@@ -175,7 +184,10 @@ def main() -> None:
 
     interface = extract_special(decompiled, "StoryInterface")
     if interface:
-        (STORY / "StoryInterface.twee").write_text(":: StoryInterface\n" + interface.rstrip() + "\n", encoding="utf-8")
+        header = extract_special_header(decompiled, "StoryInterface") or '{"position":"280,50","size":"100,100"}'
+        (STORY / "StoryInterface.twee").write_text(
+            f":: StoryInterface {header}\n" + interface.rstrip() + "\n", encoding="utf-8"
+        )
         print("Updated story/StoryInterface.twee from published HTML.")
 
     print(f"Imported 20 passages into {STORY / 'Passages.twee'}")

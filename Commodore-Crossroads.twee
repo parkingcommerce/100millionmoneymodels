@@ -10,7 +10,7 @@ Commodore Crossroads
   "zoom": 1
 }
 
-:: StoryInit
+:: StoryInit {"position":"80,50","size":"100,100"}
 <<set $career to 0>>
 <<set $integrity to 0>>
 <<set $wellness to 0>>
@@ -24,7 +24,7 @@ Commodore Crossroads
 <<set $startTime to Date.now()>>
 <<set $elapsedFinal to null>>
 
-:: StoryInterface
+:: StoryInterface {"position":"280,50","size":"100,100"}
 <div id="app">
 <header class="vu-header"><div class="vu-brandbar"><img class="vu-logo" id="vuLogo" alt="Vanderbilt star logo"><span class="vu-wordmark">Vanderbilt University</span></div><div class="vu-gametitle">Commodore Crossroads</div></header>
 <nav class="sec-tabs" aria-label="Sections">
@@ -57,7 +57,7 @@ Commodore Crossroads
 <footer class="vu-footer"><span>Student-created interactive project. Not an official Vanderbilt University website.</span></footer>
 </div>
 
-:: start {"position":"100,100","size":"100,100"}
+:: start {"position":"80,280","size":"100,100"}
 <h2 class="scene-title">Commodore Crossroads</h2>
 <span class="countdown-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>30 days until graduation</span>
 <h1>Choose Your Life<br>After Vanderbilt</h1>
@@ -65,121 +65,121 @@ Commodore Crossroads
 <div class="message warning">UNKNOWN: “Thirty days. Three doors. One future. Every choice will follow you.”</div>
 <p>Your mission is to graduate with a future, a conscience, and—if possible—your sanity.</p>
 <div class="choices">
-<<button "Begin the countdown" "family">><</button>>
+<<button [[Begin the countdown|family]]>><</button>>
 </div>
 
-:: family {"position":"250,100","size":"100,100"}
+:: family {"position":"300,280","size":"100,100"}
 <div class="eyebrow">Passage 2 • The Pressure Call</div>
 <h2 class="scene-title">Your Family Is Calling</h2>
 <p>Your family asks the question every senior fears:</p>
 <div class="message">“So…do you have a job yet?”</div>
 <p>You stare at your unopened rejection emails. One subject line reads, “Exciting Update!” It was not exciting.</p>
 <div class="choices">
-<<button 'Tell the truth: “I am still figuring it out.”' "invitation">><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 1>><</button>>
-<<button 'Say, “Everything is under control.”' "invitation">><<set $career to $career + 1>><<set $integrity to $integrity - 1>><</button>>
-<<button "Promise you will become a lawyer or doctor" "invitation">><<set $wellness to $wellness - 2>><<set $career to $career + 1>><</button>>
+<<button [[Tell the truth: “I am still figuring it out.”|invitation]]>><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 1>><</button>>
+<<button [[Say, “Everything is under control.”|invitation]]>><<set $career to $career + 1>><<set $integrity to $integrity - 1>><</button>>
+<<button [[Promise you will become a lawyer or doctor|invitation]]>><<set $wellness to $wellness - 2>><<set $career to $career + 1>><</button>>
 </div>
 
-:: invitation {"position":"400,100","size":"100,100"}
+:: invitation {"position":"520,280","size":"100,100"}
 <div class="eyebrow">Passage 3 • The Secret Invitation</div>
 <h2 class="scene-title">11:59 P.M.</h2>
 <p>A black envelope slides under your dorm-room door. On it is a gold Vanderbilt “V.”</p>
 <div class="message warning">REPORT TO THE CAREER VAULT BEFORE MIDNIGHT.<br>BRING YOUR RÉSUMÉ.<br>COME ALONE.</div>
 <p>You open the door. The hallway is empty. Even the RA has vanished—which, honestly, is the least believable part.</p>
 <div class="choices">
-<<button "Follow the gold arrows downstairs" "resume">><</button>>
-<<button "Call a friend and go together" "resume">><<set $friend to true>><<set $wellness to $wellness + 1>><</button>>
+<<button [[Follow the gold arrows downstairs|resume]]>><</button>>
+<<button [[Call a friend and go together|resume]]>><<set $friend to true>><<set $wellness to $wellness + 1>><</button>>
 </div>
 
-:: resume {"position":"550,100","size":"100,100"}
+:: resume {"position":"740,280","size":"100,100"}
 <div class="eyebrow">Passage 4 • The Résumé Test</div>
 <h2 class="scene-title">The Scanner Wants the Truth</h2>
 <p>A steel door blocks the basement. A scanner speaks:</p>
 <div class="message">“One line on your résumé determines entry. Select carefully. This record cannot be erased.”</div>
 <div class="choices">
-<<button "Use only your real experience" "vault">><<set $resume to "honest">><<set $integrity to $integrity + 3>><</button>>
-<<button "Make a small internship sound much bigger" "vault">><<set $resume to "exaggerated">><<set $career to $career + 2>><<set $integrity to $integrity - 2>><</button>>
-<<button "Invent an elite internship" "vault">><<set $resume to "fake">><<set $career to $career + 4>><<set $integrity to $integrity - 5>><</button>>
+<<button [[Use only your real experience|vault]]>><<set $resume to "honest">><<set $integrity to $integrity + 3>><</button>>
+<<button [[Make a small internship sound much bigger|vault]]>><<set $resume to "exaggerated">><<set $career to $career + 2>><<set $integrity to $integrity - 2>><</button>>
+<<button [[Invent an elite internship|vault]]>><<set $resume to "fake">><<set $career to $career + 4>><<set $integrity to $integrity - 5>><</button>>
 </div>
 
-:: vault {"position":"100,250","size":"100,100"}
+:: vault {"position":"960,280","size":"100,100"}
 <div class="eyebrow">Passage 5 • The Career Vault</div>
 <h2 class="scene-title">Three Doors. One Deadline.</h2>
 <p>The door opens onto an impossible underground hall. Three elevators wait beneath flickering signs.</p>
 <p><span class="tag">THE COURTROOM</span><span class="tag">THE CORPORATE TOWER</span><span class="tag">THE RESEARCH LAB</span></p>
 <p>A voice whispers: “Prestige has a price. Purpose has a price. Indecision also has a price—usually with interest.”</p>
 <div class="choices">
-<<button "Approach the three elevators" "choose">><<set $days to $days - 3>><</button>>
+<<button [[Approach the three elevators|choose]]>><<set $days to $days - 3>><</button>>
 </div>
 
-:: choose {"position":"250,250","size":"100,100"}
+:: choose {"position":"1180,280","size":"100,100"}
 <div class="eyebrow">Passage 6 • Choose Your Mission</div>
 <h2 class="scene-title">Select Your Future</h2>
 <p>The floor shakes. You have ten seconds before the elevators lock.</p>
 <div class="clock">00:10</div>
 <p>This choice opens your first career mission. It does not guarantee your ending.</p>
 <div class="choices">
-<<button "Enter the Courtroom" "careerLaw">><<set $path to "Law">><</button>>
-<<button "Enter the Corporate Tower" "careerFinance">><<set $path to "Finance & Consulting">><</button>>
-<<button "Enter the Research Laboratory" "careerResearch">><<set $path to "Medicine & Research">><</button>>
+<<button [[Enter the Courtroom|careerLaw]]>><<set $path to "Law">><</button>>
+<<button [[Enter the Corporate Tower|careerFinance]]>><<set $path to "Finance & Consulting">><</button>>
+<<button [[Enter the Research Laboratory|careerResearch]]>><<set $path to "Medicine & Research">><</button>>
 </div>
 
-:: careerLaw {"position":"400,250","size":"100,100"}
+:: careerLaw {"position":"740,500","size":"100,100"}
 <div class="eyebrow">Person 2 • Passage 7</div>
 <h2 class="scene-title">The Courtroom Mission</h2>
 <p>A law firm offers you a final interview. Its salary could change your family’s life. Then a confidential file appears: the firm is defending a corporation accused of poisoning a low-income neighborhood.</p>
 <div class="message warning">MISSION: Decide before the partner returns.</div>
 <div class="choices">
-<<button "Accept and say nothing" "submitted">><<set $career to $career + 3>><<set $integrity to $integrity - 3>><</button>>
-<<button "Question the recruiter about the case" "submitted">><<set $career to $career + 1>><<set $integrity to $integrity + 2>><</button>>
-<<button "Reject the firm and protect your values" "submitted">><<set $career to $career - 1>><<set $integrity to $integrity + 4>><</button>>
+<<button [[Accept and say nothing|submitted]]>><<set $career to $career + 3>><<set $integrity to $integrity - 3>><</button>>
+<<button [[Question the recruiter about the case|submitted]]>><<set $career to $career + 1>><<set $integrity to $integrity + 2>><</button>>
+<<button [[Reject the firm and protect your values|submitted]]>><<set $career to $career - 1>><<set $integrity to $integrity + 4>><</button>>
 </div>
 
-:: careerFinance {"position":"550,250","size":"100,100"}
+:: careerFinance {"position":"960,500","size":"100,100"}
 <div class="eyebrow">Person 2 • Passage 8</div>
 <h2 class="scene-title">The Corporate Tower</h2>
 <p>A consulting firm offers a path toward a six-figure salary. An exhausted analyst traps you in the elevator.</p>
 <div class="message">“The money is real. So are the 2 a.m. emails. Yesterday, I called my houseplant ‘Mom.’”</div>
 <div class="choices">
-<<button "Chase the salary and prestige" "submitted">><<set $career to $career + 4>><<set $wellness to $wellness - 3>><</button>>
-<<button "Investigate the company’s practices" "submitted">><<set $career to $career + 1>><<set $integrity to $integrity + 2>><</button>>
-<<button "Choose a smaller mission-driven firm" "submitted">><<set $career to $career + 1>><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 2>><</button>>
+<<button [[Chase the salary and prestige|submitted]]>><<set $career to $career + 4>><<set $wellness to $wellness - 3>><</button>>
+<<button [[Investigate the company’s practices|submitted]]>><<set $career to $career + 1>><<set $integrity to $integrity + 2>><</button>>
+<<button [[Choose a smaller mission-driven firm|submitted]]>><<set $career to $career + 1>><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 2>><</button>>
 </div>
 
-:: careerResearch {"position":"100,400","size":"100,100"}
+:: careerResearch {"position":"1180,500","size":"100,100"}
 <div class="eyebrow">Person 2 • Passage 9</div>
 <h2 class="scene-title">The Locked Laboratory</h2>
 <p>A professor offers you a prestigious research position. On the desk, you find notes proving another student created the original idea but received no credit.</p>
 <p>The professor’s footsteps approach. You have seconds.</p>
 <div class="choices">
-<<button "Accept the position and hide the notes" "submitted">><<set $career to $career + 4>><<set $integrity to $integrity - 4>><</button>>
-<<button "Demand shared credit for the student" "submitted">><<set $career to $career + 1>><<set $integrity to $integrity + 4>><</button>>
-<<button "Photograph the evidence and contact the student" "submitted">><<set $integrity to $integrity + 3>><<set $wellness to $wellness + 1>><<set $friend to true>><</button>>
+<<button [[Accept the position and hide the notes|submitted]]>><<set $career to $career + 4>><<set $integrity to $integrity - 4>><</button>>
+<<button [[Demand shared credit for the student|submitted]]>><<set $career to $career + 1>><<set $integrity to $integrity + 4>><</button>>
+<<button [[Photograph the evidence and contact the student|submitted]]>><<set $integrity to $integrity + 3>><<set $wellness to $wellness + 1>><<set $friend to true>><</button>>
 </div>
 
-:: submitted {"position":"250,400","size":"100,100"}
+:: submitted {"position":"80,720","size":"100,100"}
 <div class="eyebrow">Passage 10 • Application Submitted</div>
 <h2 class="scene-title">Decision Pending</h2>
 <div class="email"><b>APPLICATION STATUS</b><p>We received your materials. Twelve finalists remain. A decision will arrive after an internal review.</p></div>
 <p class="pulse">Three days pass. Then four. Then five.</p>
 <p>Your roommate says, “Maybe they are being thoughtful.” Your inbox says nothing.</p>
 <div class="choices">
-<<button "Enter the waiting room" "waiting">><<set $days to $days - 7>><</button>>
+<<button [[Enter the waiting room|waiting]]>><<set $days to $days - 7>><</button>>
 </div>
 
-:: waiting {"position":"400,400","size":"100,100"}
+:: waiting {"position":"300,720","size":"100,100"}
 <div class="eyebrow">Passage 11 • Side Mission</div>
 <h2 class="scene-title">The Waiting Room</h2>
 <p>The interview remains locked. You have one night to prepare—or distract yourself from the terror.</p>
 <div class="message">SIDE MISSION: How will you spend the night?</div>
 <div class="choices">
-<<button "Practice answers until midnight" "interview">><<set $prepared to true>><<set $career to $career + 3>><<set $wellness to $wellness - 1>><</button>>
-<<button "Help a nervous friend prepare" "interview">><<set $prepared to true>><<set $friend to true>><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 2>><</button>>
-<<button "Attend a party and ignore everything" "interview">><<set $prepared to false>><<set $career to $career - 2>><<set $wellness to $wellness + 3>><</button>>
-<<button "Investigate the mysterious recruiter" "interview">><<set $prepared to true>><<set $career to $career + 1>><<set $integrity to $integrity + 1>><</button>>
+<<button [[Practice answers until midnight|interview]]>><<set $prepared to true>><<set $career to $career + 3>><<set $wellness to $wellness - 1>><</button>>
+<<button [[Help a nervous friend prepare|interview]]>><<set $prepared to true>><<set $friend to true>><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 2>><</button>>
+<<button [[Attend a party and ignore everything|interview]]>><<set $prepared to false>><<set $career to $career - 2>><<set $wellness to $wellness + 3>><</button>>
+<<button [[Investigate the mysterious recruiter|interview]]>><<set $prepared to true>><<set $career to $career + 1>><<set $integrity to $integrity + 1>><</button>>
 </div>
 
-:: interview {"position":"550,400","size":"100,100"}
+:: interview {"position":"520,720","size":"100,100"}
 <div class="eyebrow">Passage 12 • Boss Battle</div>
 <h2 class="scene-title">The Interview Battle</h2>
 <p>The camera turns on. Six interviewers stare silently. One asks:</p>
@@ -187,65 +187,65 @@ Commodore Crossroads
 <<if $prepared>>
 <p>You prepared. Your hands still shake, but your mind is ready.</p>
 <div class="choices">
-<<button "Tell a truthful story about failure" "rejection">><<set $career to $career + 2>><<set $integrity to $integrity + 3>><</button>>
-<<button "Give the polished answer they want" "rejection">><<set $career to $career + 4>><<set $integrity to $integrity - 1>><</button>>
+<<button [[Tell a truthful story about failure|rejection]]>><<set $career to $career + 2>><<set $integrity to $integrity + 3>><</button>>
+<<button [[Give the polished answer they want|rejection]]>><<set $career to $career + 4>><<set $integrity to $integrity - 1>><</button>>
 </div>
 <<else>>
 <p>You did not prepare. Your brain offers one useful thought: run.</p>
 <div class="choices">
-<<button "Admit you are nervous and answer honestly" "rejection">><<set $integrity to $integrity + 2>><<set $career to $career - 1>><</button>>
-<<button "Invent a heroic leadership story" "rejection">><<set $career to $career + 2>><<set $integrity to $integrity - 4>><</button>>
+<<button [[Admit you are nervous and answer honestly|rejection]]>><<set $integrity to $integrity + 2>><<set $career to $career - 1>><</button>>
+<<button [[Invent a heroic leadership story|rejection]]>><<set $career to $career + 2>><<set $integrity to $integrity - 4>><</button>>
 </div>
 <</if>>
 
-:: rejection {"position":"100,550","size":"100,100"}
+:: rejection {"position":"740,720","size":"100,100"}
 <div class="eyebrow">Passage 13 • The Fall</div>
 <h2 class="scene-title">“Unfortunately…”</h2>
 <div class="email"><b>SUBJECT: Your Application</b><p>Thank you for your interest. Unfortunately, we have decided—</p></div>
 <p>The screen goes black before you finish. Then your phone rings from a blocked number.</p>
 <div class="choices">
-<<button "Answer the blocked call" "offer">><</button>>
-<<button "Throw the phone onto the bed, then answer it anyway" "offer">><<set $wellness to $wellness + 1>><</button>>
+<<button [[Answer the blocked call|offer]]>><</button>>
+<<button [[Throw the phone onto the bed, then answer it anyway|offer]]>><<set $wellness to $wellness + 1>><</button>>
 </div>
 
-:: offer {"position":"250,550","size":"100,100"}
+:: offer {"position":"960,720","size":"100,100"}
 <div class="eyebrow">Passage 14 • The Devil’s Shortcut</div>
 <h2 class="scene-title">The Unexpected Offer</h2>
 <p>A powerful alumnus speaks quietly:</p>
 <div class="message warning">“I can reverse the rejection. No more interviews. No questions. But someday, I will ask you for one favor.”</div>
 <p>Thunder strikes outside. Your weather app says clear skies.</p>
 <div class="choices">
-<<button "Accept the secret arrangement" "check">><<set $favor to true>><<set $offer to "shortcut">><<set $career to $career + 5>><<set $integrity to $integrity - 4>><</button>>
-<<button "Ask what the favor will be" "check">><<set $favor to true>><<set $offer to "questioned">><<set $integrity to $integrity + 1>><</button>>
-<<button "Reject the offer completely" "check">><<set $favor to false>><<set $offer to "rejected">><<set $integrity to $integrity + 4>><<set $career to $career - 1>><</button>>
+<<button [[Accept the secret arrangement|check]]>><<set $favor to true>><<set $offer to "shortcut">><<set $career to $career + 5>><<set $integrity to $integrity - 4>><</button>>
+<<button [[Ask what the favor will be|check]]>><<set $favor to true>><<set $offer to "questioned">><<set $integrity to $integrity + 1>><</button>>
+<<button [[Reject the offer completely|check]]>><<set $favor to false>><<set $offer to "rejected">><<set $integrity to $integrity + 4>><<set $career to $career - 1>><</button>>
 </div>
 
-:: check {"position":"400,550","size":"100,100"}
+:: check {"position":"80,940","size":"100,100"}
 <div class="eyebrow">Person 3 • Passage 15</div>
 <h2 class="scene-title">Background Check</h2>
 <<if $resume is "honest">>
 <p class="good">VERIFIED.</p>
 <p>Every résumé line survives inspection. The investigator closes the file—but notices the alumnus’s number in your call log.</p>
 <div class="choices">
-<<button "Continue with your record intact" "twoOffers">><<set $career to $career + 2>><<set $integrity to $integrity + 2>><</button>>
+<<button [[Continue with your record intact|twoOffers]]>><<set $career to $career + 2>><<set $integrity to $integrity + 2>><</button>>
 </div>
 <<elseif $resume is "exaggerated">>
 <p class="danger">DISCREPANCY FOUND.</p>
 <p>Your title and duties do not match the employer’s records. A compliance officer gives you sixty seconds to explain.</p>
 <div class="choices">
-<<button "Admit you exaggerated" "twoOffers">><<set $career to $career - 2>><<set $integrity to $integrity + 2>><</button>>
-<<button "Defend the claim and blame HR" "twoOffers">><<set $career to $career - 1>><<set $integrity to $integrity - 4>><</button>>
+<<button [[Admit you exaggerated|twoOffers]]>><<set $career to $career - 2>><<set $integrity to $integrity + 2>><</button>>
+<<button [[Defend the claim and blame HR|twoOffers]]>><<set $career to $career - 1>><<set $integrity to $integrity - 4>><</button>>
 </div>
 <<else>>
 <p class="danger">FRAUD ALERT.</p>
 <p>The invented internship does not exist. Security freezes your application. The lie from Mission One has returned.</p>
 <div class="choices">
-<<button "Confess before they finish" "twoOffers">><<set $career to $career - 5>><<set $integrity to $integrity + 1>><<set $offer to "lost">><</button>>
-<<button "Create another lie to cover it" "twoOffers">><<set $career to $career - 7>><<set $integrity to $integrity - 6>><<set $offer to "lost">><</button>>
+<<button [[Confess before they finish|twoOffers]]>><<set $career to $career - 5>><<set $integrity to $integrity + 1>><<set $offer to "lost">><</button>>
+<<button [[Create another lie to cover it|twoOffers]]>><<set $career to $career - 7>><<set $integrity to $integrity - 6>><<set $offer to "lost">><</button>>
 </div>
 <</if>>
 
-:: twoOffers {"position":"550,550","size":"100,100"}
+:: twoOffers {"position":"300,940","size":"100,100"}
 <div class="eyebrow">Passage 16 • Final Countdown</div>
 <h2 class="scene-title">Two Offers. One Hour.</h2>
 <<if $offer is "lost">>
@@ -256,34 +256,34 @@ Commodore Crossroads
 <div class="message">OFFER A: $125,000, prestige, brutal hours, questionable mission.<br><br>OFFER B: $62,000, meaningful work, uncertain future.</div>
 <div class="clock">59:59</div>
 <div class="choices">
-<<button "Choose prestige and financial security" "emergency">><<set $offer to "prestige">><<set $career to $career + 5>><<set $wellness to $wellness - 4>><</button>>
-<<button "Choose meaningful work" "emergency">><<set $offer to "purpose">><<set $career to $career + 1>><<set $integrity to $integrity + 3>><<set $wellness to $wellness + 3>><</button>>
-<<button "Reject both and build something new" "emergency">><<set $offer to "founder">><<set $career to $career + 2>><<set $wellness to $wellness - 1>><</button>>
+<<button [[Choose prestige and financial security|emergency]]>><<set $offer to "prestige">><<set $career to $career + 5>><<set $wellness to $wellness - 4>><</button>>
+<<button [[Choose meaningful work|emergency]]>><<set $offer to "purpose">><<set $career to $career + 1>><<set $integrity to $integrity + 3>><<set $wellness to $wellness + 3>><</button>>
+<<button [[Reject both and build something new|emergency]]>><<set $offer to "founder">><<set $career to $career + 2>><<set $wellness to $wellness - 1>><</button>>
 </div>
 
-:: emergency {"position":"100,700","size":"100,100"}
+:: emergency {"position":"520,940","size":"100,100"}
 <div class="eyebrow">Passage 17 • The Emergency</div>
 <h2 class="scene-title">The Call From Home</h2>
 <p>Minutes before signing, your family calls. Someone you love needs immediate support. Your career choice now affects more than you.</p>
 <p>The contract expires at midnight. The last flight leaves in ninety minutes.</p>
 <div class="choices">
-<<button "Go home immediately" "betrayal">><<set $integrity to $integrity + 3>><<set $wellness to $wellness + 3>><<set $career to $career - 2>><</button>>
-<<button "Sign first, then find another way to help" "betrayal">><<set $career to $career + 3>><<set $wellness to $wellness - 2>><</button>>
-<<button "Call your network and build a compromise" "betrayal">><<set $career to $career + 1>><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 1>><</button>>
+<<button [[Go home immediately|betrayal]]>><<set $integrity to $integrity + 3>><<set $wellness to $wellness + 3>><<set $career to $career - 2>><</button>>
+<<button [[Sign first, then find another way to help|betrayal]]>><<set $career to $career + 3>><<set $wellness to $wellness - 2>><</button>>
+<<button [[Call your network and build a compromise|betrayal]]>><<set $career to $career + 1>><<set $integrity to $integrity + 2>><<set $wellness to $wellness + 1>><</button>>
 </div>
 
-:: betrayal {"position":"250,700","size":"100,100"}
+:: betrayal {"position":"740,940","size":"100,100"}
 <div class="eyebrow">Passage 18 • The Betrayal Test</div>
 <h2 class="scene-title">Your Friend’s Secret</h2>
 <p>Your friend—the one <<if $friend>>you helped earlier<<else>>who competed against you<</if>>—is the other finalist. A leaked file could destroy their future and guarantee yours.</p>
 <div class="message warning">FINAL ETHICAL TEST: Nobody will know what you choose.</div>
 <div class="choices">
-<<button "Use the file against your friend" "graduation">><<set $career to $career + 5>><<set $integrity to $integrity - 7>><<set $wellness to $wellness - 3>><</button>>
-<<button "Delete the file and warn your friend" "graduation">><<set $integrity to $integrity + 5>><<set $wellness to $wellness + 2>><</button>>
-<<button "Report the leak without opening it" "graduation">><<set $integrity to $integrity + 4>><<set $career to $career + 1>><</button>>
+<<button [[Use the file against your friend|graduation]]>><<set $career to $career + 5>><<set $integrity to $integrity - 7>><<set $wellness to $wellness - 3>><</button>>
+<<button [[Delete the file and warn your friend|graduation]]>><<set $integrity to $integrity + 5>><<set $wellness to $wellness + 2>><</button>>
+<<button [[Report the leak without opening it|graduation]]>><<set $integrity to $integrity + 4>><<set $career to $career + 1>><</button>>
 </div>
 
-:: graduation {"position":"400,700","size":"100,100"}
+:: graduation {"position":"80,1160","size":"100,100"}
 <div class="eyebrow">Passage 19 • Graduation Day</div>
 <h2 class="scene-title">The Last Walk</h2>
 <<set _ending to setup.ending()>>
@@ -293,11 +293,11 @@ Commodore Crossroads
 <p><<print _ending.text>></p>
 <div class="message">You earned a Vanderbilt degree. But did you choose your own life?</div>
 <div class="choices">
-<<button "Read the creators’ reflection" "reflection">><</button>>
-<<button "Play again and challenge your fate" "start">><<run setup.resetGame()>><</button>>
+<<button [[Read the creators’ reflection|reflection]]>><</button>>
+<<button [[Play again and challenge your fate|start]]>><<run setup.resetGame()>><</button>>
 </div>
 
-:: reflection {"position":"550,700","size":"100,100"}
+:: reflection {"position":"300,1160","size":"100,100"}
 <div class="eyebrow">Passage 20 • Reflection & Bibliography</div>
 <h2 class="scene-title">Behind the Crossroads</h2>
 <h3>Group Reflection</h3>
@@ -310,8 +310,8 @@ Commodore Crossroads
 <p>Vanderbilt University Career Center. Career exploration and preparation resources.<br>Twine. <i>Twine Reference and Documentation.</i><br>Group-created narrative, dialogue, scoring system, and original ethical dilemmas.</p>
 <p><i>Replace or expand this bibliography with the exact sources and media your group uses before submitting.</i></p>
 <div class="choices">
-<<button "Return to graduation" "graduation">><</button>>
-<<button "Restart the entire story" "start">><<run setup.resetGame()>><</button>>
+<<button [[Return to graduation|graduation]]>><</button>>
+<<button [[Restart the entire story|start]]>><<run setup.resetGame()>><</button>>
 </div>
 
 :: StoryStylesheet [stylesheet]

@@ -116,14 +116,44 @@ def export_import_twee() -> None:
     IMPORT_TWEE.write_text("".join(p.read_text(encoding="utf-8") + "\n" for p in parts if p.exists()), encoding="utf-8")
 
 
+def _html_unescape(text: str) -> str:
+    return (
+        text.replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", '"')
+        .replace("&amp;", "&")
+        .replace("&#39;", "'")
+    )
+
+
+def twine_parse_links(text: str) -> list[str]:
+    """Match Twine 2 parseLinks(): unique destinations of [[...]] wiki links."""
+    tags = re.findall(r"\[\[.*?\]\]", text)
+    seen: list[str] = []
+    for tag in tags:
+        inner = tag[2:-2]
+        if "][" in inner:
+            inner = inner.split("][", 1)[0]
+        if "->" in inner:
+            dest = inner.split("->")[-1]
+        elif "<-" in inner:
+            dest = inner.split("<-")[0]
+        elif "|" in inner:
+            dest = inner.split("|")[-1]
+        else:
+            dest = inner
+        dest = dest.strip()
+        if dest and dest not in seen and not re.match(r"^\w+://", dest):
+            seen.append(dest)
+    return seen
+
+
 def validate_html(path: Path) -> None:
     html = path.read_text(encoding="utf-8")
     if 'format="SugarCube"' not in html:
         raise SystemExit(f"{path.name}: missing SugarCube story data")
-    names = re.findall(
-        r'<tw-passagedata[^>]*name="([^"]+)"',
-        re.search(r"<tw-storydata.*?</tw-storydata>", html, re.DOTALL).group(0),
-    )
+    storydata = re.search(r"<tw-storydata.*?</tw-storydata>", html, re.DOTALL).group(0)
+    names = re.findall(r'<tw-passagedata[^>]*name="([^"]+)"', storydata)
     story_passages = [n for n in names if n not in SPECIAL_PASSAGES]
     expected = {
         "start", "family", "invitation", "resume", "vault", "choose",
@@ -133,6 +163,56 @@ def validate_html(path: Path) -> None:
     }
     if set(story_passages) != expected:
         raise SystemExit(f"Passage mismatch in {path.name}: {story_passages}")
+
+    expected_links = {
+        "start": {"family"},
+        "family": {"invitation"},
+        "invitation": {"resume"},
+        "resume": {"vault"},
+        "vault": {"choose"},
+        "choose": {"careerLaw", "careerFinance", "careerResearch"},
+        "careerLaw": {"submitted"},
+        "careerFinance": {"submitted"},
+        "careerResearch": {"submitted"},
+        "submitted": {"waiting"},
+        "waiting": {"interview"},
+        "interview": {"rejection"},
+        "rejection": {"offer"},
+        "offer": {"check"},
+        "check": {"twoOffers"},
+        "twoOffers": {"emergency"},
+        "emergency": {"betrayal"},
+        "betrayal": {"graduation"},
+        "graduation": {"reflection", "start"},
+        "reflection": {"graduation", "start"},
+    }
+    boxes: list[tuple[str, int, int]] = []
+    for match in re.finditer(
+        r'<tw-passagedata([^>]*)>(.*?)</tw-passagedata>',
+        storydata,
+        re.DOTALL,
+    ):
+        attrs, raw = match.group(1), match.group(2)
+        name = re.search(r'\bname="([^"]+)"', attrs).group(1)
+        body = _html_unescape(raw)
+        if re.search(r'<<button\s+(?:"|\')', body):
+            raise SystemExit(f"{path.name}: {name} still uses quoted <<button>> args Twine cannot map")
+        links = set(twine_parse_links(body))
+        expect = expected_links.get(name)
+        if expect is not None and links != expect:
+            raise SystemExit(f"{path.name}: Twine map links for {name} are {sorted(links)}, expected {sorted(expect)}")
+        pos = re.search(r'\bposition="([^"]+)"', attrs)
+        if pos:
+            x, y = (int(float(p)) for p in pos.group(1).split(","))
+            boxes.append((name, x, y))
+    for i, (a, ax, ay) in enumerate(boxes):
+        for b, bx, by in boxes[i + 1 :]:
+            if abs(ax - bx) < 100 and abs(ay - by) < 100:
+                raise SystemExit(f"{path.name}: overlapping map boxes {a} ({ax},{ay}) and {b} ({bx},{by})")
+    util_y = [y for name, x, y in boxes if name in {"StoryInit", "StoryInterface"}]
+    story_y = [y for name, x, y in boxes if name in expected]
+    if util_y and story_y and max(util_y) + 100 > min(story_y):
+        raise SystemExit(f"{path.name}: utility passages overlap the narrative map")
 
 
 def build() -> None:
