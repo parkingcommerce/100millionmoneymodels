@@ -5,6 +5,18 @@ Config.saves.isAllowed = function () { return false; };
 Config.passages.nobr = true;
 if (typeof UIBar !== 'undefined' && UIBar.destroy) { UIBar.destroy(); }
 
+/* Twine Test sets Config.debug before startup. ?debug=1 reproduces those debug
+   views in a browser; re-run init only when the bar was skipped so Engine.start
+   can still create StoryInit debug views without aborting later startup. */
+if (/(?:^|[?&])debug=1(?:&|$)/.test(String(location.search || ''))) {
+  Config.debug = true;
+  try {
+    if (typeof DebugBar !== 'undefined' && typeof DebugBar.init === 'function' && !document.getElementById('debug-bar')) {
+      DebugBar.init();
+    }
+  } catch (err) {}
+}
+
 Object.defineProperty(window, 's', { configurable: true, get: function () { return State.variables; } });
 var clockTimer = null;
 
@@ -82,6 +94,57 @@ function wrapPassageCard() {
   }
 }
 
+function ensureDebugDock() {
+  var dock = document.getElementById('cc-debug-dock');
+  if (dock) return dock;
+  dock = document.createElement('aside');
+  dock.id = 'cc-debug-dock';
+  dock.className = 'collapsed';
+  dock.setAttribute('aria-label', 'SugarCube initialization debug');
+  var title = document.createElement('button');
+  title.type = 'button';
+  title.id = 'cc-debug-dock-title';
+  title.setAttribute('aria-expanded', 'false');
+  title.textContent = 'Test debug: StoryInit';
+  title.addEventListener('click', function () {
+    var open = dock.classList.toggle('collapsed') === false;
+    title.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  var body = document.createElement('div');
+  body.id = 'cc-debug-dock-body';
+  dock.appendChild(title);
+  dock.appendChild(body);
+  var host = document.getElementById('app') || document.body;
+  host.appendChild(dock);
+  return dock;
+}
+
+function relocateInitDebugViews() {
+  if (typeof DebugView === 'undefined' || !DebugView.isEnabled()) return;
+  var root = document.getElementById('passages');
+  if (!root) return;
+  var specials = root.querySelectorAll('.debug[data-type|="special"]');
+  if (!specials.length) return;
+  var dock = ensureDebugDock();
+  var body = document.getElementById('cc-debug-dock-body');
+  Array.prototype.forEach.call(specials, function (el) {
+    var name = el.getAttribute('data-name') || '';
+    var existing = body.querySelector('.debug[data-name="' + name.replace(/"/g, '') + '"]');
+    if (existing && existing !== el) existing.remove();
+    var nxt = el.nextSibling;
+    body.appendChild(el);
+    if (nxt && nxt.nodeName === 'WBR' && nxt.classList && nxt.classList.contains('debug')) {
+      nxt.parentNode.removeChild(nxt);
+    }
+  });
+  Array.prototype.forEach.call(root.querySelectorAll('wbr.debug'), function (wbr) {
+    var parent = wbr.parentNode;
+    if (parent && (parent.id === 'passages' || parent.classList.contains('passage'))) {
+      parent.removeChild(wbr);
+    }
+  });
+}
+
 function afterPassage(name) {
   startClock();
   if (name === 'graduation') {
@@ -98,6 +161,19 @@ $(document).on(':storyready', function () {
   var bb = document.getElementById('backBtn');
   if (bb) bb.addEventListener('click', openBackModal);
   updateBackBtn();
+  if (Config.debug && typeof DebugView !== 'undefined' && DebugView.enable) {
+    DebugView.enable();
+  }
+  document.querySelectorAll('#debug-bar').forEach(function (bar, i) {
+    if (i > 0) bar.parentNode.removeChild(bar);
+  });
+  document.querySelectorAll('#debug-bar-hint').forEach(function (hint) {
+    hint.parentNode.removeChild(hint);
+  });
+  if (Config.debug && typeof DebugBar !== 'undefined' && typeof DebugBar.stow === 'function') {
+    DebugBar.stow();
+  }
+  relocateInitDebugViews();
 });
 
 $(document).on(':passagestart', function () {
@@ -114,6 +190,10 @@ $(document).on(':passagedisplay', function () {
   afterPassage(passage());
   var stage = document.getElementById('stage');
   if (stage) stage.scrollTop = 0;
+});
+
+$(document).on(':passageend', function () {
+  relocateInitDebugViews();
 });
 
 /* ===================== Community features (feedback, leaderboard, resources) ===================== */

@@ -348,14 +348,67 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     }
 
 /* ===== SugarCube chrome: keep the custom Vanderbilt UI, hide the format default ===== */
-#ui-bar,#ui-bar-tray,#ui-bar-body,#ui-overlay,#ui-dialog-overlay,#ui-dialog,#debug-bar,#debug-bar-toggle{display:none!important}
+#ui-bar,#ui-bar-tray,#ui-bar-body,#ui-overlay,#ui-dialog-overlay,#ui-dialog{display:none!important}
+html:not([data-debug-view]) #debug-bar,
+html:not([data-debug-view]) #debug-bar-toggle,
+html:not([data-debug-view]) #debug-bar-hint,
+html:not([data-debug-view]) #debug-bar-watch,
+html:not([data-debug-view]) .debug.hidden{display:none!important}
 html.no-ui-bar #story,html #story{margin:0!important;max-width:none!important;padding:0!important}
-#story{position:static;width:100%;min-height:100%}
-#passages{margin:0;padding:0}
-#passages .passage{margin:0;padding:0}
+#story{position:static;width:100%;min-height:100%;max-width:100%}
+#passages{margin:0;padding:0;min-width:0}
+#passages .passage{margin:0;padding:0;min-width:0}
 #stage #passages,#stage .passage{min-height:0}
 .passage ul{margin:0;padding:0;list-style:none}
 #passages a.link-internal,#passages a.link-external{color:inherit}
+html,body,#app{max-width:100%;overflow-x:hidden}
+
+/* Test mode: SugarCube prepends StoryInit as a display:block special debug view.
+   Keep that output visible, but never let it become a full-width gray slab. */
+html[data-debug-view] #passages .debug[data-name][data-type]::before{content:attr(data-name);background-color:rgba(0,0,0,.25);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre}
+html[data-debug-view] #passages .debug[data-name][data-type|="macro"]::before{content:"<<" attr(data-name) ">>"}
+html[data-debug-view] #passages .debug[data-name][data-type|="macro"].nonvoid::after{content:"<</" attr(data-name) ">>";background-color:rgba(0,0,0,.25);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+html[data-debug-view] #passages .debug{padding:0 .2em;font-size:.68rem;line-height:1.25;vertical-align:baseline}
+html[data-debug-view] #passages .debug.hidden,html[data-debug-view] #passages .debug.hidden .debug{background-color:#4a4a4a;color:#f3f3f3}
+html[data-debug-view] #passages .debug.invalid{outline:1px solid #c44;background:#5a2020;text-decoration:line-through}
+html[data-debug-view] #passages .error{display:block;margin:.4em 0;padding:.45em .65em;background:#f6ece9;color:#7a2417;border-left:3px solid #7a2417}
+html[data-debug-view] #passages wbr.debug{display:none}
+html[data-debug-view] #passages .debug[data-type|="special"],
+html[data-debug-view] #passages .debug[data-type|="special"]::before{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px;
+  max-height:4.8rem;overflow:auto;margin:0 0 .55em;padding:4px 6px;
+  font-size:11px;line-height:1.3;background:#333;color:#eee;border-radius:4px
+}
+html[data-debug-view] #passages .debug[data-type|="special"]::before{display:inline;max-height:none;overflow:visible;margin:0 6px 0 0;padding:0}
+html[data-debug-view] #passages .choices .debug[data-type|="macro"]{display:flex;flex-direction:column;align-items:stretch;min-width:0}
+html[data-debug-view] #passages .choices .debug[data-type|="macro"]::before{align-self:flex-start;margin:0 0 3px;font-size:10px}
+
+#cc-debug-dock{display:none}
+html[data-debug-view] #cc-debug-dock{
+  display:block;position:fixed;left:8px;bottom:8px;z-index:99940;
+  width:min(360px,calc(100vw - 16px));max-height:32vh;overflow:auto;
+  background:#1d1d1d;color:#eee;border:1px solid #555;border-radius:6px;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);font-size:11px;line-height:1.35
+}
+html[data-debug-view] #cc-debug-dock.collapsed{max-height:none;overflow:hidden}
+html[data-debug-view] #cc-debug-dock.collapsed #cc-debug-dock-body{display:none}
+#cc-debug-dock-title{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;margin:0;padding:6px 8px;border:0;background:#111;color:#feeeb6;font:700 10px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+#cc-debug-dock-body{padding:6px 8px 8px}
+html[data-debug-view] #cc-debug-dock .debug,
+html[data-debug-view] #cc-debug-dock .debug.hidden,
+html[data-debug-view] #cc-debug-dock .debug.hidden .debug{
+  display:inline-flex;flex-wrap:wrap;align-items:center;gap:3px;
+  max-width:100%;padding:2px 5px;margin:2px;background:#3a3a3a;color:#f3f3f3;border-radius:3px
+}
+html[data-debug-view] #cc-debug-dock .debug[data-name][data-type]::before{content:attr(data-name);margin-right:.25em}
+html[data-debug-view] #cc-debug-dock .debug[data-name][data-type|="macro"]::before{content:"<<" attr(data-name) ">>"}
+html[data-debug-view] #cc-debug-dock wbr.debug{display:none}
+
+html[data-debug-view] #debug-bar{
+  position:fixed;right:0;bottom:0;z-index:99900;background:#222;color:#eee;
+  max-width:min(22rem,calc(100vw - 56px));max-height:42vh;min-width:0;overflow:auto;font-size:12px
+}
+html[data-debug-view] #debug-bar-hint{display:none!important}
 
 /* SugarCube <<button>> / <<link>> become the existing Kahoot-style choice tiles */
 #passages .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(140px,20vw,220px),1fr));gap:clamp(8px,1vw,12px);margin-top:clamp(10px,1.6vh,20px)}
@@ -401,6 +454,18 @@ Config.saves.maxAutoSaves = 0;
 Config.saves.isAllowed = function () { return false; };
 Config.passages.nobr = true;
 if (typeof UIBar !== 'undefined' && UIBar.destroy) { UIBar.destroy(); }
+
+/* Twine Test sets Config.debug before startup. ?debug=1 reproduces those debug
+   views in a browser; re-run init only when the bar was skipped so Engine.start
+   can still create StoryInit debug views without aborting later startup. */
+if (/(?:^|[?&])debug=1(?:&|$)/.test(String(location.search || ''))) {
+  Config.debug = true;
+  try {
+    if (typeof DebugBar !== 'undefined' && typeof DebugBar.init === 'function' && !document.getElementById('debug-bar')) {
+      DebugBar.init();
+    }
+  } catch (err) {}
+}
 
 Object.defineProperty(window, 's', { configurable: true, get: function () { return State.variables; } });
 var clockTimer = null;
@@ -479,6 +544,57 @@ function wrapPassageCard() {
   }
 }
 
+function ensureDebugDock() {
+  var dock = document.getElementById('cc-debug-dock');
+  if (dock) return dock;
+  dock = document.createElement('aside');
+  dock.id = 'cc-debug-dock';
+  dock.className = 'collapsed';
+  dock.setAttribute('aria-label', 'SugarCube initialization debug');
+  var title = document.createElement('button');
+  title.type = 'button';
+  title.id = 'cc-debug-dock-title';
+  title.setAttribute('aria-expanded', 'false');
+  title.textContent = 'Test debug: StoryInit';
+  title.addEventListener('click', function () {
+    var open = dock.classList.toggle('collapsed') === false;
+    title.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  var body = document.createElement('div');
+  body.id = 'cc-debug-dock-body';
+  dock.appendChild(title);
+  dock.appendChild(body);
+  var host = document.getElementById('app') || document.body;
+  host.appendChild(dock);
+  return dock;
+}
+
+function relocateInitDebugViews() {
+  if (typeof DebugView === 'undefined' || !DebugView.isEnabled()) return;
+  var root = document.getElementById('passages');
+  if (!root) return;
+  var specials = root.querySelectorAll('.debug[data-type|="special"]');
+  if (!specials.length) return;
+  var dock = ensureDebugDock();
+  var body = document.getElementById('cc-debug-dock-body');
+  Array.prototype.forEach.call(specials, function (el) {
+    var name = el.getAttribute('data-name') || '';
+    var existing = body.querySelector('.debug[data-name="' + name.replace(/"/g, '') + '"]');
+    if (existing && existing !== el) existing.remove();
+    var nxt = el.nextSibling;
+    body.appendChild(el);
+    if (nxt && nxt.nodeName === 'WBR' && nxt.classList && nxt.classList.contains('debug')) {
+      nxt.parentNode.removeChild(nxt);
+    }
+  });
+  Array.prototype.forEach.call(root.querySelectorAll('wbr.debug'), function (wbr) {
+    var parent = wbr.parentNode;
+    if (parent && (parent.id === 'passages' || parent.classList.contains('passage'))) {
+      parent.removeChild(wbr);
+    }
+  });
+}
+
 function afterPassage(name) {
   startClock();
   if (name === 'graduation') {
@@ -495,6 +611,19 @@ $(document).on(':storyready', function () {
   var bb = document.getElementById('backBtn');
   if (bb) bb.addEventListener('click', openBackModal);
   updateBackBtn();
+  if (Config.debug && typeof DebugView !== 'undefined' && DebugView.enable) {
+    DebugView.enable();
+  }
+  document.querySelectorAll('#debug-bar').forEach(function (bar, i) {
+    if (i > 0) bar.parentNode.removeChild(bar);
+  });
+  document.querySelectorAll('#debug-bar-hint').forEach(function (hint) {
+    hint.parentNode.removeChild(hint);
+  });
+  if (Config.debug && typeof DebugBar !== 'undefined' && typeof DebugBar.stow === 'function') {
+    DebugBar.stow();
+  }
+  relocateInitDebugViews();
 });
 
 $(document).on(':passagestart', function () {
@@ -511,6 +640,10 @@ $(document).on(':passagedisplay', function () {
   afterPassage(passage());
   var stage = document.getElementById('stage');
   if (stage) stage.scrollTop = 0;
+});
+
+$(document).on(':passageend', function () {
+  relocateInitDebugViews();
 });
 
 /* ===================== Community features (feedback, leaderboard, resources) ===================== */

@@ -15,8 +15,8 @@ After import, Twine shows a passage map. Click **Play** or **Test** to see the V
 
 ## Play, Test, and Publish to File
 
-- **Play / Test:** HUD icons, gallery photos, and the Vanderbilt star are embedded, so they load even when Twine cannot see the `assets/` folder.
-- **Publish to File:** save the HTML anywhere. Local images still work because they are embedded. YouTube resources, Immersion Sounds, Google Fonts, and live backend data still need internet.
+- **Play / Publish to File:** the full Vanderbilt interface with no SugarCube debug labels or StoryInit dump. Local images still work because they are embedded. YouTube resources, Immersion Sounds, Google Fonts, and live backend data still need internet.
+- **Test:** SugarCube still creates StoryInit `<<set>>` debug views (initialization is unchanged). Those views are moved into a compact **Test debug: StoryInit** dock instead of a gray slab inside the first passage. The debug-bar toggle stays available; the giant debug hint is hidden so it does not cover the layout. In a browser, add `?debug=1` to the HTML URL to preview this Test layout.
 
 ## Edit in Twine, then bring changes back
 
